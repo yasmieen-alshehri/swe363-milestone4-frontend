@@ -1,4 +1,4 @@
-function Button({ text, variant = "primary", style }) {
+function Button({ text, variant = "primary", style, onClick, disabled = false }) {
   const classes = {
     primary: "btn-primary",
     secondary: "btn-secondary",
@@ -7,10 +7,14 @@ function Button({ text, variant = "primary", style }) {
   };
 
   return (
-    <button className={classes[variant]} style={style}>
+    <button
+      className={classes[variant]}
+      style={style}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {text}
     </button>
-    
   );
 }
 

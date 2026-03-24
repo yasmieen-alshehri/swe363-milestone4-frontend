@@ -87,7 +87,7 @@ function Card({ product, onWishlistClick }) {
                     marginBottom: "16px",
                 }}
             >
-                {product.image === null ? "$???" : `$${product.price.toFixed(2)}`}
+                {product.price > 0 ? `$${product.price.toFixed(2)}` : "$???"}
             </p>
 
             <div
@@ -108,7 +108,7 @@ function Card({ product, onWishlistClick }) {
                     </>
                 ) : (
                     <>
-                        <Button text="Out Of Stock" variant="purpleDisabled" />
+                        <Button text="Out Of Stock" variant="purpleDisabled" disabled />
                         <Button text="Product details" variant="purple" />
                     </>
                 )}

@@ -31,7 +31,7 @@ function Products() {
     {
       id: 3,
       name: "Soap Bliss",
-      price: 0,
+      price: null,
       image: null,
       scent: "Rose",
       skinType: "Sensitive",
@@ -57,14 +57,15 @@ function Products() {
   };
 
   const applyFilters = () => {
-    if (Number(minPrice) > Number(maxPrice)) {
+    if (minPrice !== "" && maxPrice !== "" && Number(minPrice) > Number(maxPrice)) {
       alert("Invalid price range");
       return;
     }
 
     const result = allProducts.filter((product) => {
       const matchesPrice =
-        product.price >= Number(minPrice) && product.price <= Number(maxPrice);
+        product.price == null ||
+        (product.price >= Number(minPrice) && product.price <= Number(maxPrice));
 
       const matchesScent =
         selectedScents.length === 0 || selectedScents.includes(product.scent);
@@ -206,6 +207,7 @@ function Products() {
                 text="Apply Filters"
                 variant="purple"
                 style={{ width: "100%", margin: 0 }}
+                onClick={applyFilters}
               />
             </div>
 
