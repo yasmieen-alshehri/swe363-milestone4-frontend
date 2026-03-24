@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Card from "../components/Card";
+import Button from "../components/Button";
 import rose from "../assets/rose.png";
 import lavender from "../assets/lavender.png";
+
 
 function Products() {
   const allProducts = [
@@ -200,22 +202,11 @@ function Products() {
                 </p>
               )}
 
-              <button
-                onClick={applyFilters}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  background: "#8f4bd8",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "12px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                }}
-              >
-                Apply Filters
-              </button>
+              <Button
+                text="Apply Filters"
+                variant="purple"
+                style={{ width: "100%", margin: 0 }}
+              />
             </div>
 
             <div style={{ marginBottom: "18px" }}>
