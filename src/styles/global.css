@@ -1,0 +1,13 @@
+:root {
+  --primary: #b85c6b;
+  --secondary: #d98c98;
+  --light-pink: #f3c7cf;
+  --soft-pink: #d99aa5;
+  --text-dark: #2e3d4c;
+}
+
+body {
+  margin: 0;
+  font-family: 'Josefin Sans', sans-serif;
+  background: linear-gradient(135deg, #b45f69, #d8a0aa);
+}
