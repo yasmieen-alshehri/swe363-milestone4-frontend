@@ -14,6 +14,8 @@ function Customize() {
     const textures = ["Smooth", "Scrub"];
     const ingredients = ["xxxxx", "xxxxx", "Sugar", "Other stuff", "Milk", "Love"];
 
+    const isMobile = window.innerWidth <= 768;
+
     const toggleMultiSelect = (value, selectedValues, setSelectedValues) => {
         if (selectedValues.includes(value)) {
             setSelectedValues(selectedValues.filter((item) => item !== value));
@@ -45,20 +47,20 @@ function Customize() {
             className="purple-page"
             style={{
                 minHeight: "100vh",
-                padding: "55px 50px",
+                padding: isMobile ? "24px 16px 140px" : "55px 50px",
                 boxSizing: "border-box",
             }}
         >
             <button
                 onClick={() => navigate(-1)}
                 style={{
-                    padding: "14px 34px",
+                    padding: isMobile ? "12px 24px" : "14px 34px",
                     borderRadius: "25px",
                     border: "1px solid rgba(255,255,255,0.35)",
                     background: "rgba(255,255,255,0.10)",
                     backdropFilter: "blur(12px)",
                     color: "#3b3b3b",
-                    fontSize: "16px",
+                    fontSize: isMobile ? "15px" : "16px",
                     fontFamily: "Josefin Sans, sans-serif",
                     cursor: "pointer",
                     marginBottom: "20px",
@@ -76,18 +78,23 @@ function Customize() {
                     background: "rgba(255,255,255,0.10)",
                     border: "1px solid rgba(255,255,255,0.28)",
                     borderRadius: "30px",
-                    padding: "20px 26px",
-                    minHeight: "470px",
+                    padding: isMobile ? "18px 14px" : "20px 26px",
+                    minHeight: isMobile ? "auto" : "470px",
                     display: "flex",
+                    flexDirection: isMobile ? "column" : "row",
                     gap: "18px",
+                    flexWrap: "wrap",
                     backdropFilter: "blur(14px)",
+                    overflowX: "hidden",
                 }}
             >
                 <div
                     style={{
                         display: "flex",
+                        flexDirection: isMobile ? "column" : "row",
                         gap: "14px",
                         alignItems: "flex-start",
+                        width: isMobile ? "100%" : "auto",
                     }}
                 >
                     <div
@@ -95,14 +102,17 @@ function Customize() {
                             display: "flex",
                             flexDirection: "column",
                             gap: "10px",
+                            width: isMobile ? "100%" : "auto",
                         }}
                     >
                         <div
                             style={{
-                                width: "200px",
+                                width: "100%",
+                                maxWidth: isMobile ? "100%" : "220px",
                                 background: "rgba(255,255,255,0.28)",
                                 borderRadius: "14px",
                                 padding: "18px",
+                                boxSizing: "border-box",
                             }}
                         >
                             <h3
@@ -147,10 +157,12 @@ function Customize() {
 
                         <div
                             style={{
-                                width: "200px",
+                                width: "100%",
+                                maxWidth: isMobile ? "100%" : "220px",
                                 background: "rgba(255,255,255,0.28)",
                                 borderRadius: "14px",
                                 padding: "18px",
+                                boxSizing: "border-box",
                             }}
                         >
                             <h3
@@ -191,11 +203,13 @@ function Customize() {
 
                     <div
                         style={{
-                            width: "210px",
+                            width: "100%",
+                            maxWidth: isMobile ? "100%" : "220px",
                             minHeight: "300px",
                             background: "rgba(255,255,255,0.28)",
                             borderRadius: "14px",
                             padding: "18px",
+                            boxSizing: "border-box",
                         }}
                     >
                         <h3
@@ -242,31 +256,123 @@ function Customize() {
                 <div
                     style={{
                         flex: 1,
-                        position: "relative",
-                        minHeight: "420px",
+                        minHeight: isMobile ? "auto" : "420px",
+                        display: "flex",
+                        flexDirection: "column",
+                        width: isMobile ? "100%" : "auto",
                     }}
                 >
                     {!isValid && (
                         <p
                             style={{
                                 color: "#ff5a45",
-                                fontSize: "22px",
+                                fontSize: isMobile ? "18px" : "22px",
                                 fontWeight: "500",
-                                textAlign: "center",
-                                marginTop: "160px",
+                                textAlign: isMobile ? "left" : "center",
+                                marginTop: isMobile ? "10px" : "160px",
+                                marginBottom: isMobile ? "20px" : "0",
                             }}
                         >
                             Please select all required options
                         </p>
                     )}
 
+                    {!isMobile && (
+                        <div
+                            style={{
+                                marginTop: "auto",
+                                alignSelf: "flex-end",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "flex-end",
+                                gap: "12px",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    width: "160px",
+                                    padding: "16px 18px",
+                                    borderRadius: "999px",
+                                    background: "rgba(255,255,255,0.16)",
+                                    border: "1px solid rgba(255,255,255,0.35)",
+                                    textAlign: "center",
+                                    color: "#444",
+                                    fontWeight: "700",
+                                    fontSize: "16px",
+                                    boxSizing: "border-box",
+                                }}
+                            >
+                                Price: ${price.toFixed(2)}
+                            </div>
+
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "20px",
+                                    flexWrap: "wrap",
+                                }}
+                            >
+                                {addedToCart && isValid && (
+                                    <p
+                                        style={{
+                                            color: "#39a86f",
+                                            fontSize: "15px",
+                                            fontWeight: "600",
+                                            margin: 0,
+                                            whiteSpace: "nowrap",
+                                        }}
+                                    >
+                                        Customized product added to cart
+                                    </p>
+                                )}
+
+                                <div
+                                    style={{
+                                        width: "160px",
+                                        padding: "16px",
+                                        borderRadius: "24px",
+                                        background: "rgba(255,255,255,0.12)",
+                                        border: "1px solid rgba(255,255,255,0.30)",
+                                        boxSizing: "border-box",
+                                    }}
+                                >
+                                    <Button
+                                        text="Add to Cart"
+                                        variant={isValid ? "purple" : "purpleDisabled"}
+                                        disabled={!isValid}
+                                        style={{ width: "100%" }}
+                                        onClick={handleAddToCart}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {isMobile && (
+                <div
+                    style={{
+                        position: "fixed",
+                        left: "50%",
+                        bottom: "20px",
+                        transform: "translateX(-50%)",
+                        width: "calc(100% - 32px)",
+                        maxWidth: "420px",
+                        zIndex: 100,
+                        background: "rgba(255,255,255,0.14)",
+                        border: "1px solid rgba(255,255,255,0.30)",
+                        backdropFilter: "blur(12px)",
+                        borderRadius: "22px",
+                        padding: "14px",
+                        boxSizing: "border-box",
+                    }}
+                >
                     <div
                         style={{
-                            position: "absolute",
-                            right: "0",
-                            bottom: "110px",
-                            width: "145px",
-                            padding: "16px 18px",
+                            width: "100%",
+                            padding: "14px 16px",
                             borderRadius: "999px",
                             background: "rgba(255,255,255,0.16)",
                             border: "1px solid rgba(255,255,255,0.35)",
@@ -274,56 +380,36 @@ function Customize() {
                             color: "#444",
                             fontWeight: "700",
                             fontSize: "16px",
+                            boxSizing: "border-box",
+                            marginBottom: "10px",
                         }}
                     >
                         Price: ${price.toFixed(2)}
                     </div>
 
-                    <div
-                        style={{
-                            position: "absolute",
-                            right: "0",
-                            bottom: "12px",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "14px",
-                        }}
-                    >
-                        {addedToCart && isValid && (
-                            <p
-                                style={{
-                                    color: "#39a86f",
-                                    fontSize: "16px",
-                                    fontWeight: "600",
-                                    margin: 0,
-                                    whiteSpace: "nowrap",
-                                    transform: "translateY(-4px)",
-                                }}
-                            >
-                                Customized product added to cart
-                            </p>
-                        )}
-
-                        <div
+                    {addedToCart && isValid && (
+                        <p
                             style={{
-                                width: "160px",
-                                padding: "16px",
-                                borderRadius: "24px",
-                                background: "rgba(255,255,255,0.12)",
-                                border: "1px solid rgba(255,255,255,0.30)",
+                                color: "#39a86f",
+                                fontSize: "14px",
+                                fontWeight: "600",
+                                margin: "0 0 10px 0",
+                                textAlign: "center",
                             }}
                         >
-                            <Button
-                                text="Add to Cart"
-                                variant={isValid ? "purple" : "purpleDisabled"}
-                                disabled={!isValid}
-                                style={{ width: "100%" }}
-                                onClick={handleAddToCart}
-                            />
-                        </div>
-                    </div>
+                            Customized product added to cart
+                        </p>
+                    )}
+
+                    <Button
+                        text="Add to Cart"
+                        variant={isValid ? "purple" : "purpleDisabled"}
+                        disabled={!isValid}
+                        style={{ width: "100%" }}
+                        onClick={handleAddToCart}
+                    />
                 </div>
-            </div>
+            )}
         </div>
     );
 }
