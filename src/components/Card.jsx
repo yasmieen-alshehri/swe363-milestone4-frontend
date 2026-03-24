@@ -1,7 +1,10 @@
 import Button from "./Button";
 import heart from "../assets/heart.png";
+import { useNavigate } from "react-router-dom";
 
 function Card({ product, onWishlistClick }) {
+    const navigate = useNavigate();
+
     return (
         <div
             style={{
@@ -100,7 +103,11 @@ function Card({ product, onWishlistClick }) {
                 }}
             >
                 {product.customizable ? (
-                    <Button text="Customize" variant="purple" />
+                    <Button
+                        text="Customize"
+                        variant="purple"
+                        onClick={() => navigate("/customize")}
+                    />
                 ) : product.inStock ? (
                     <>
                         <Button text="Add to Cart" variant="purple" />
