@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import logo from "../assets/bubble-logo.png";
 import cart from "../assets/cart.png";
 import profile from "../assets/profile-picture.png";
 
 function Navbar() {
-  const [active, setActive] = useState("Home");
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -21,7 +21,11 @@ function Navbar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const links = ["Home", "Products", "Contact Us"];
+  const links = [
+    { name: "Home", path: "/" },
+    { name: "Products", path: "/products" },
+    { name: "Contact Us", path: "/contact" },
+  ];
 
   return (
     <>
@@ -64,19 +68,19 @@ function Navbar() {
             }}
           >
             {links.map((link) => (
-              <span
-                key={link}
-                onClick={() => setActive(link)}
-                style={{
+              <NavLink
+                key={link.name}
+                to={link.path}
+                style={({ isActive }) => ({
                   cursor: "pointer",
-                  color: active === link ? "#fff" : "#333",
-                  fontWeight: active === link ? 700 : 400,
-                  textDecoration: active === link ? "underline" : "none",
+                  color: isActive ? "#fff" : "#333",
+                  fontWeight: isActive ? 700 : 400,
+                  textDecoration: isActive ? "underline" : "none",
                   transition: "all 0.3s ease",
-                }}
+                })}
               >
-                {link}
-              </span>
+                {link.name}
+              </NavLink>
             ))}
           </div>
         )}
@@ -137,21 +141,20 @@ function Navbar() {
           }}
         >
           {links.map((link) => (
-            <span
-              key={link}
-              onClick={() => {
-                setActive(link);
-                setMenuOpen(false);
-              }}
-              style={{
+            <NavLink
+              key={link.name}
+              to={link.path}
+              onClick={() => setMenuOpen(false)}
+              style={({ isActive }) => ({
                 cursor: "pointer",
-                color: active === link ? "#fff" : "#2e3d4c",
-                fontWeight: active === link ? 700 : 400,
+                color: isActive ? "#fff" : "#2e3d4c",
+                fontWeight: isActive ? 700 : 400,
+                textDecoration: "none",
                 transition: "all 0.3s ease",
-              }}
+              })}
             >
-              {link}
-            </span>
+              {link.name}
+            </NavLink>
           ))}
         </div>
       )}

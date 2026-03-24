@@ -7,7 +7,7 @@ import heart from "../assets/heart.png";
 
 function Home() {
   return (
-    <div
+    <div className="pink-page"
       style={{
         minHeight: "100vh",
         position: "relative",
