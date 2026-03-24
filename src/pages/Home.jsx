@@ -3,6 +3,7 @@ import Button from "../components/Button";
 import rose from "../assets/rose.png";
 import bubble7 from "../assets/bubble7.png";
 import bubble8 from "../assets/bubble8.png";
+import heart from "../assets/heart.png";
 
 function Home() {
   return (
@@ -77,6 +78,19 @@ function Home() {
         >
           <Button text="Add to Cart" variant="primary" />
           <Button text="More Details" variant="secondary" />
+
+          {/* heart icon */}
+          <img
+            src={heart}
+            alt="wishlist"
+            style={{
+              width: "22px",
+              height: "22px",
+              cursor: "pointer",
+              opacity: 0.7,
+              transition: "0.3s",
+            }}
+          />
         </div>
       </div>
     </div>
