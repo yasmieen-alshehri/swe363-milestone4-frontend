@@ -17,6 +17,7 @@ function Products() {
       skinType: "Normal",
       inStock: true,
       customizable: false,
+      theme: "pink",
     },
     {
       id: 2,
@@ -27,6 +28,7 @@ function Products() {
       skinType: "Normal",
       inStock: false,
       customizable: false,
+      theme: "purple",
     },
     {
       id: 3,

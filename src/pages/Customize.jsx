@@ -31,7 +31,10 @@ function Customize() {
         setAddedToCart(false);
     };
 
-    const isValid = selectedScents.length > 0 && selectedTexture !== "";
+    const isValid =
+        selectedScents.length > 0 &&
+        selectedTexture !== "" &&
+        selectedIngredients.length > 0;
     const price = 7.0;
 
     const handleAddToCart = () => {

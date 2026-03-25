@@ -4,10 +4,29 @@ import rose from "../assets/rose.png";
 import bubble7 from "../assets/bubble7.png";
 import bubble8 from "../assets/bubble8.png";
 import heart from "../assets/heart.png";
+import heartFilled from "../assets/heart-filled.png";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
+
+  const [liked, setLiked] = useState(false);
+
+  const isLoggedIn = false; 
+
+  const handleWishlist = () => {
+    if (!isLoggedIn) {
+      alert("Please login first");
+      return;
+    }
+
+    setLiked(!liked);
+  };
+
   return (
-    <div className="pink-page"
+    <div
+      className="pink-page"
       style={{
         minHeight: "100vh",
         position: "relative",
@@ -57,6 +76,7 @@ function Home() {
           zIndex: 2,
         }}
       >
+        
         <img
           src={rose}
           alt="Bubble Soap"
@@ -79,20 +99,38 @@ function Home() {
             marginTop: "-50px",
           }}
         >
-          <Button text="Add to Cart" variant="primary" />
-          <Button text="More Details" variant="secondary" />
+          {/* Add to Cart */}
+          <Button
+            text="Add to Cart"
+            variant="primary"
+            onClick={() => {
+              if (!isLoggedIn) {
+                alert("Please login first");
+              } else {
+                alert("Added to cart");
+              }
+            }}
+          />
 
-          {/* heart icon */}
+          {/* More Details */}
+          <Button
+            text="More Details"
+            variant="secondary"
+            onClick={() => navigate("/product-details/1")}
+          />
+
+          {/* ❤️ Heart */}
           <img
-            src={heart}
+            src={liked ? heartFilled : heart}
             alt="wishlist"
-            onClick={() => alert("Please login first")}
+            onClick={handleWishlist}
             style={{
               width: "22px",
               height: "22px",
               cursor: "pointer",
-              opacity: 0.7,
               transition: "0.3s",
+              transform: liked ? "scale(1.2)" : "scale(1)",
+              opacity: liked ? 1 : 0.7,
             }}
           />
         </div>
