@@ -110,7 +110,11 @@ function Card({ product, onWishlistClick }) {
                     />
                 ) : product.inStock ? (
                     <>
-                        <Button text="Add to Cart" variant="purple" />
+                        <Button
+                            text="Add to Cart"
+                            variant="purple"
+                            onClick={() => alert("Please login first")}
+                        />
                         <Button text="Product details" variant="purple" />
                     </>
                 ) : (

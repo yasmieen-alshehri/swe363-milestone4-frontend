@@ -86,6 +86,7 @@ function Home() {
           <img
             src={heart}
             alt="wishlist"
+            onClick={() => alert("Please login first")}
             style={{
               width: "22px",
               height: "22px",
