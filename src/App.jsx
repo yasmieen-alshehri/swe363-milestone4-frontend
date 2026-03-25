@@ -4,6 +4,7 @@ import Products from "./pages/Products";
 import Customize from "./pages/Customize";
 import Contact from "./pages/Contact";
 import ProductDetails from "./pages/ProductDetails";
+import Checkout from "./pages/Cart";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/customize" element={<Customize />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/product-details/:id" element={<ProductDetails />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </BrowserRouter>
   );

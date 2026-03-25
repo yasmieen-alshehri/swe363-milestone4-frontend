@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import soap from "../assets/soap-bliss.png";
+
 
 function Customize() {
     const navigate = useNavigate();
@@ -15,7 +17,7 @@ function Customize() {
     const ingredients = ["xxxxx", "xxxxx", "Sugar", "Other stuff", "Milk", "Love"];
 
     const isMobile = window.innerWidth <= 768;
-    const isLoggedIn = false;
+    const isLoggedIn = true;
 
     const toggleMultiSelect = (value, selectedValues, setSelectedValues) => {
         if (selectedValues.includes(value)) {
@@ -47,6 +49,31 @@ function Customize() {
             alert("Please login first");
             return;
         }
+
+        const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+        const customProduct = {
+            id: 4,
+            quantity: 1,
+        };
+
+        const existingItem = storedCart.find(
+            (item) => item.id === customProduct.id
+        );
+
+        let updatedCart;
+
+        if (existingItem) {
+            updatedCart = storedCart.map((item) =>
+                item.id === customProduct.id
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
+            );
+        } else {
+            updatedCart = [...storedCart, customProduct];
+        }
+
+        localStorage.setItem("cartItems", JSON.stringify(updatedCart));
 
         setAddedToCart(true);
     };
@@ -271,15 +298,26 @@ function Customize() {
                         width: isMobile ? "100%" : "auto",
                     }}
                 >
+                    <div style={{ display: "flex", justifyContent: "center", marginTop: "40px", marginBottom: "20px" }}>
+                        <img
+                            src={soap}
+                            alt="Custom Soap"
+                            style={{
+                                width: "400px",
+                                height: "400px",
+                                objectFit: "contain",
+                            }}
+                        />
+                    </div>
                     {!isValid && (
                         <p
                             style={{
                                 color: "#ff5a45",
                                 fontSize: isMobile ? "18px" : "22px",
                                 fontWeight: "500",
-                                textAlign: isMobile ? "left" : "center",
-                                marginTop: isMobile ? "10px" : "160px",
-                                marginBottom: isMobile ? "20px" : "0",
+                                textAlign: "center",
+                                marginTop: "0",
+                                marginBottom: "10px",
                             }}
                         >
                             Please select all required options

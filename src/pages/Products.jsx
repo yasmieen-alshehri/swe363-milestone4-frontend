@@ -4,6 +4,7 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import rose from "../assets/rose.png";
 import lavender from "../assets/lavender.png";
+import rosemary from "../assets/rosemary.png";
 
 
 function Products() {
@@ -30,8 +31,20 @@ function Products() {
       customizable: false,
       theme: "purple",
     },
-    {
+     {
       id: 3,
+      name: "Rosemary Bliss",
+      price: 50,
+      image: rosemary,
+      scent: "Rose",
+      skinType: "Normal",
+      inStock: true,
+      customizable: false,
+      theme: "yellow",
+    },
+
+    {
+      id: 4,
       name: "Soap Bliss",
       price: null,
       image: null,
@@ -40,6 +53,7 @@ function Products() {
       inStock: true,
       customizable: true,
     },
+    
   ];
 
   const [selectedScents, setSelectedScents] = useState([]);
@@ -48,7 +62,7 @@ function Products() {
   const [maxPrice, setMaxPrice] = useState(100);
   const [filteredProducts, setFilteredProducts] = useState(allProducts);
 
-  const isLoggedIn = false;
+  const isLoggedIn = true;
 
   const handleCheckboxChange = (value, selectedValues, setSelectedValues) => {
     if (selectedValues.includes(value)) {

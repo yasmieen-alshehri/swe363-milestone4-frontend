@@ -3,10 +3,12 @@ import { NavLink } from "react-router-dom";
 import logo from "../assets/bubble-logo.png";
 import cart from "../assets/cart.png";
 import profile from "../assets/profile-picture.png";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -102,9 +104,11 @@ function Navbar() {
           <img
             src={cart}
             alt="Cart"
+            onClick={() => navigate("/checkout")}
             style={{
               width: isMobile ? "20px" : "24px",
               objectFit: "contain",
+              cursor: "pointer",
             }}
           />
 
