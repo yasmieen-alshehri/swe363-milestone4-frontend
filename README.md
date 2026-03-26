@@ -43,13 +43,15 @@ Users can explore products, add items to the cart, manage a wishlist, and comple
 
 ## Project Structure
 
+```
 src/
-├── components/   # Reusable components (Button, Card, Input, Navbar)
-├── pages/        # Main pages (Home, Products, Cart, Checkout, etc.)
-├── assets/       # Images
-├── styles/       # CSS
+├── components/ # Reusable components (Button, Card, Input, Navbar)
+├── pages/ # Main pages (Home, Products, Cart, Checkout, etc.)
+├── assets/ # Images
+├── styles/ # CSS
 ├── App.jsx
 └── main.jsx
+```
 
 ---
 
