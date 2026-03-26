@@ -1,3 +1,4 @@
+// Navigation bar component
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/bubble-logo.png";
@@ -6,10 +7,12 @@ import profile from "../assets/profile-picture.png";
 import { useNavigate } from "react-router-dom";
 
 function Navbar() {
+  // Navbar state
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Handle screen resize
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
@@ -23,6 +26,7 @@ function Navbar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Navigation links
   const links = [
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
@@ -51,6 +55,7 @@ function Navbar() {
           zIndex: 100,
         }}
       >
+        {/* Website logo */}
         <img
           src={logo}
           alt="Bubble Logo"
@@ -58,7 +63,7 @@ function Navbar() {
             width: isMobile ? "70px" : "95px",
           }}
         />
-
+        {/* Desktop navigation links */}
         {!isMobile && (
           <div
             style={{
@@ -86,7 +91,7 @@ function Navbar() {
             ))}
           </div>
         )}
-
+        {/* Cart and profile icons */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           {isMobile && (
             <div
@@ -125,6 +130,7 @@ function Navbar() {
         </div>
       </nav>
 
+      {/* Mobile menu */}
       {isMobile && menuOpen && (
         <div
           style={{

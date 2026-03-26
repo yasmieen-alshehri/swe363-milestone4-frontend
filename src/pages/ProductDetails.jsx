@@ -19,8 +19,10 @@ function ProductDetails() {
     const [reviewText, setReviewText] = useState("");
     const [liked, setLiked] = useState(false);
 
+    // Simulated login state (change for testing)
     const isLoggedIn = true;
 
+    // Handle screen resize
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
@@ -30,6 +32,7 @@ function ProductDetails() {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    // Product data
     const products = [
         {
             id: 1,
@@ -70,6 +73,7 @@ function ProductDetails() {
         },
     ];
 
+    // Get selected product by id
     const product = products.find((p) => p.id === Number(id));
     const [reviews, setReviews] = useState(product?.reviews || []);
 
@@ -100,6 +104,7 @@ function ProductDetails() {
                 ? "yellow-page"
                 : "pink-page";
 
+    // Add product to cart
     const handleAddToCart = () => {
         setAddedToCart(false);
 
@@ -112,7 +117,7 @@ function ProductDetails() {
             alert("Out of stock");
             return;
         }
-
+        // Get cart from localStorage
         let storedCart =
             JSON.parse(localStorage.getItem("cartItems")) || [];
 
@@ -140,6 +145,7 @@ function ProductDetails() {
         setAddedToCart(true);
     };
 
+    // Toggle wishlist
     const handleWishlistClick = () => {
         if (!isLoggedIn) {
             alert("Please login first");
@@ -149,6 +155,7 @@ function ProductDetails() {
         setLiked(!liked);
     };
 
+    // Add new review
     const handleSendReview = () => {
         if (!isLoggedIn) {
             alert("Please login first");
@@ -199,7 +206,7 @@ function ProductDetails() {
                     pointerEvents: "none",
                 }}
             />
-
+            {/* Go back to previous page */}
             <button
                 onClick={() => navigate(-1)}
                 style={{
@@ -311,6 +318,7 @@ function ProductDetails() {
                                 width: "100%",
                             }}
                         >
+                            {/* Add to cart button */}
                             <Button
                                 text="Add to Cart"
                                 variant={product.inStock ? "primary" : "purpleDisabled"}
@@ -427,7 +435,7 @@ function ProductDetails() {
                                 Only logged in users can review
                             </p>
                         )}
-
+                        {/* Display reviews */}
                         {reviews.map((review, index) => (
                             <div key={index} style={reviewStyle(isMobile)}>
                                 <img src={profile} alt="profile" style={reviewIconStyle(isMobile)} />

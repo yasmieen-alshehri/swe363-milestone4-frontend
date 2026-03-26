@@ -1,3 +1,4 @@
+// Product card component
 import Button from "./Button";
 import heart from "../assets/heart.png";
 import heartFilled from "../assets/heart-filled.png";
@@ -8,8 +9,10 @@ function Card({ product }) {
     const navigate = useNavigate();
     const [liked, setLiked] = useState(false);
 
+    // Simulated login state (change for testing)
     const isLoggedIn = true;
 
+    // Check if product is in wishlist
     useEffect(() => {
         const storedWishlist =
             JSON.parse(localStorage.getItem("wishlistItems")) || [];
@@ -18,6 +21,7 @@ function Card({ product }) {
         setLiked(exists);
     }, [product.id]);
 
+    // Toggle wishlist
     const handleWishlistClick = () => {
         if (!isLoggedIn) {
             alert("Please login first");
@@ -41,7 +45,7 @@ function Card({ product }) {
 
         localStorage.setItem("wishlistItems", JSON.stringify(updatedWishlist));
     };
-
+    // Add product to cart
     const handleAddToCart = () => {
         if (!isLoggedIn) {
             alert("Please login first");
@@ -88,6 +92,7 @@ function Card({ product }) {
                     height: "24px",
                 }}
             >
+                {/* Wishlist icon */}
                 {!product.customizable && (
                     <img
                         src={liked ? heartFilled : heart}
@@ -169,6 +174,7 @@ function Card({ product }) {
                     marginTop: "20px",
                 }}
             >
+                {/* Customize product */}
                 {product.customizable ? (
                     <Button
                         text="Customize"

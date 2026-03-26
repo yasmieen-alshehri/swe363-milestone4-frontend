@@ -1,3 +1,5 @@
+// Home page - shows main product and actions (cart + wishlist)
+
 import Navbar from "../components/Navbar";
 import Button from "../components/Button";
 import rose from "../assets/rose.png";
@@ -11,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const navigate = useNavigate();
 
+  // Simulated login state (change for testing)
   const isLoggedIn = true;
 
   const product = {
@@ -21,6 +24,7 @@ function Home() {
   const [liked, setLiked] = useState(false);
   const [cartMessage, setCartMessage] = useState("");
 
+// Check if product is already in wishlist
   useEffect(() => {
     const storedWishlist =
       JSON.parse(localStorage.getItem("wishlistItems")) || [];
@@ -29,7 +33,7 @@ function Home() {
     setLiked(isLiked);
   }, []);
 
-  // ❤️ Wishlist
+// Add or remove product from wishlist
   const handleWishlist = () => {
     if (!isLoggedIn) {
       alert("Please login first");
@@ -57,12 +61,14 @@ function Home() {
     localStorage.setItem("wishlistItems", JSON.stringify(storedWishlist));
   };
 
-  // 🛒 Cart
+// Add product to cart
   const handleAddToCart = () => {
     if (!isLoggedIn) {
       alert("Please login first");
       return;
     }
+
+    // Get cart from localStorage
 
     let storedCart =
       JSON.parse(localStorage.getItem("cartItems")) || [];
@@ -86,6 +92,7 @@ function Home() {
 
     localStorage.setItem("cartItems", JSON.stringify(storedCart));
 
+    // Show message when item is added
     setCartMessage("Added to cart");
 
     setTimeout(() => {
@@ -157,7 +164,6 @@ function Home() {
           }}
         />
 
-        {/* الأزرار */}
         <div
           style={{
             display: "flex",
@@ -168,7 +174,6 @@ function Home() {
             marginTop: "-50px",
           }}
         >
-          {/* 🛒 Add to Cart + Message */}
           <div
             style={{
               position: "relative",
@@ -199,14 +204,14 @@ function Home() {
             )}
           </div>
 
-          {/* 📄 Details */}
+          {/* Details */}
           <Button
             text="More Details"
             variant="secondary"
             onClick={() => navigate("/product-details/1")}
           />
 
-          {/* ❤️ Wishlist */}
+          {/* Wishlist */}
           <img
             src={liked ? heartFilled : heart}
             alt="wishlist"

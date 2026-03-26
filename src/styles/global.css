@@ -15,20 +15,20 @@ body {
   font-family: 'Josefin Sans', sans-serif;
 }
 
-/* 🌸 pink pages */
+/* pink pages */
 .pink-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #b45f69, #d8a0aa);
 }
 
-/* 💜 purple pages */
+/* purple pages */
 .purple-page {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--purple-1), var(--purple-2));
   position: relative;
   overflow: hidden;
 }
-/* 💛 yellow pages */
+/* yellow pages */
 .yellow-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #d8b64f, #f3df8f);

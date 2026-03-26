@@ -4,6 +4,8 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 
 function Contact() {
+
+  // Form data state
   const [form, setForm] = useState({
     fullName: "",
     orderId: "",
@@ -13,12 +15,17 @@ function Contact() {
     message: "",
   });
 
+  // Validation errors
   const [errors, setErrors] = useState({});
+
+  // Success message
   const [successMessage, setSuccessMessage] = useState("");
 
-  const isLoggedIn = true; 
+  // Simulated login state (change for testing)
+  const isLoggedIn = true;
   const isMobile = window.innerWidth <= 768;
 
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -36,6 +43,7 @@ function Contact() {
     setSuccessMessage("");
   };
 
+  // Validate form inputs
   const validateForm = () => {
     const newErrors = {};
 
@@ -80,6 +88,7 @@ function Contact() {
     return newErrors;
   };
 
+  // Submit form
   const handleSubmit = () => {
     const newErrors = validateForm();
     setErrors(newErrors);
@@ -103,6 +112,7 @@ function Contact() {
 
   return (
     <div className="purple-page" style={{ minHeight: "100vh" }}>
+      {/* Contact form */}
       <div
         style={{
           position: "relative",
@@ -316,6 +326,7 @@ function Contact() {
                 gap: "12px",
               }}
             >
+              {/* Submit button */}
               <Button
                 text="Submit"
                 variant="purple"
@@ -324,7 +335,7 @@ function Contact() {
                 }}
                 onClick={handleSubmit}
               />
-
+              {/* Show success message */}
               {successMessage && (
                 <p
                   style={{

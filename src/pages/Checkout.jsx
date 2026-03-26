@@ -67,6 +67,7 @@ function Checkout() {
   const [orderError, setOrderError] = useState("");
   const [locationLoading, setLocationLoading] = useState(false);
 
+  // Load cart and saved profile
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
     const savedProfile = JSON.parse(localStorage.getItem("checkoutProfile")) || {
@@ -80,6 +81,7 @@ function Checkout() {
     setForm(savedProfile);
   }, []);
 
+  // Merge cart items with product details
   const cartWithDetails = cartItems
     .map((item) => {
       const product = allProducts.find((p) => p.id === item.id);
@@ -94,13 +96,16 @@ function Checkout() {
     })
     .filter(Boolean);
 
+  // Calculate subtotal
   const subtotal = cartWithDetails.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
 
+  // Calculate total after discount
   const total = Math.max(subtotal - discountAmount, 0);
 
+  // Apply discount code
   const handleDiscountApply = () => {
     setDiscountMessage("");
     setDiscountError("");
@@ -124,6 +129,7 @@ function Checkout() {
     setDiscountError("Invalid discount code");
   };
 
+  // Handle form input change
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -157,6 +163,7 @@ function Checkout() {
     }
   };
 
+  // Get user location
   const getLocation = () => {
     setSaveMessage("");
     setFormError("");
@@ -188,6 +195,7 @@ function Checkout() {
     );
   };
 
+  // Save user profile
   const handleSave = () => {
     setSaveMessage("");
     setFormError("");
@@ -213,6 +221,7 @@ function Checkout() {
     setSaveMessage("Saved!");
   };
 
+  // Confirm order
   const handlePayConfirm = () => {
     setOrderMessage("");
     setOrderError("");
@@ -268,7 +277,7 @@ function Checkout() {
           pointerEvents: "none",
         }}
       />
-
+      {/* Go back */}
       <button
         onClick={() => navigate(-1)}
         style={{
@@ -398,7 +407,7 @@ function Checkout() {
                     <th style={thStyle}>Subtotal</th>
                   </tr>
                 </thead>
-
+                {/* Display cart items */}
                 <tbody>
                   {cartWithDetails.length > 0 ? (
                     cartWithDetails.map((item) => (
@@ -443,6 +452,7 @@ function Checkout() {
                 marginBottom: "12px",
               }}
             >
+              {/* User information */}
               <h2
                 style={{
                   margin: 0,
