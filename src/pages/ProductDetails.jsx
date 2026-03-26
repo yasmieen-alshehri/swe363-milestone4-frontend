@@ -113,6 +113,30 @@ function ProductDetails() {
             return;
         }
 
+        let storedCart =
+            JSON.parse(localStorage.getItem("cartItems")) || [];
+
+        const existingItem = storedCart.find(
+            (item) => item.id === product.id
+        );
+
+        let updatedCart;
+
+        if (existingItem) {
+            updatedCart = storedCart.map((item) =>
+                item.id === product.id
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
+            );
+        } else {
+            updatedCart = [
+                ...storedCart,
+                { id: product.id, quantity: 1 },
+            ];
+        }
+
+        localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
         setAddedToCart(true);
     };
 

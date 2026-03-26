@@ -56,7 +56,7 @@ function Cart() {
       image: soap,
       inStock: true,
       stock: 10,
-    }
+    },
   ];
 
   const [discountCode, setDiscountCode] = useState("");
@@ -91,7 +91,7 @@ function Cart() {
       return {
         ...item,
         name: product.name,
-        price: product.price,
+        price: item.customPrice ?? product.price,
         image: product.image,
         stock: product.stock,
         inStock: product.inStock,
@@ -145,13 +145,18 @@ function Cart() {
     setDiscountError("Invalid discount code");
   };
 
-  const updateCartQuantity = (id, change) => {
+  const updateCartQuantity = (itemToUpdate, change) => {
     setCartMessage("");
 
     const updatedCart = cartItems.map((item) => {
-      if (item.id !== id) return item;
+      const isSameCustomItem =
+        item.customId && itemToUpdate.customId
+          ? item.customId === itemToUpdate.customId
+          : item.id === itemToUpdate.id;
 
-      const product = allProducts.find((p) => p.id === id);
+      if (!isSameCustomItem) return item;
+
+      const product = allProducts.find((p) => p.id === item.id);
       const stock = product?.stock ?? 0;
       const newQuantity = item.quantity + change;
 
@@ -216,8 +221,14 @@ function Cart() {
     localStorage.setItem("wishlistItems", JSON.stringify(updatedWishlist));
   };
 
-  const removeCartItem = (id) => {
-    const updatedCart = cartItems.filter((item) => item.id !== id);
+  const removeCartItem = (itemToRemove) => {
+    const updatedCart = cartItems.filter((item) => {
+      if (item.customId && itemToRemove.customId) {
+        return item.customId !== itemToRemove.customId;
+      }
+      return item.id !== itemToRemove.id;
+    });
+
     setCartItems(updatedCart);
     localStorage.setItem(
       "cartItems",
@@ -413,7 +424,7 @@ function Cart() {
                 <tbody>
                   {cartWithDetails.length > 0 ? (
                     cartWithDetails.map((item) => (
-                      <tr key={item.id}>
+                      <tr key={item.customId ?? item.id}>
                         <td style={tdStyle}>
                           <div style={productCell}>
                             <img
@@ -430,7 +441,7 @@ function Cart() {
                         <td style={tdStyle}>
                           <div style={qtyBox}>
                             <button
-                              onClick={() => updateCartQuantity(item.id, -1)}
+                              onClick={() => updateCartQuantity(item, -1)}
                               style={qtyBtn}
                             >
                               −
@@ -439,7 +450,7 @@ function Cart() {
                             <span style={qtyValue}>{item.quantity}</span>
 
                             <button
-                              onClick={() => updateCartQuantity(item.id, 1)}
+                              onClick={() => updateCartQuantity(item, 1)}
                               style={qtyBtn}
                             >
                               +
@@ -455,7 +466,7 @@ function Cart() {
 
                         <td style={tdStyle}>
                           <button
-                            onClick={() => removeCartItem(item.id)}
+                            onClick={() => removeCartItem(item)}
                             style={trashBtn}
                           >
                             🗑

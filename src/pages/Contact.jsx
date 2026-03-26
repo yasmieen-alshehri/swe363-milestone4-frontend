@@ -16,7 +16,7 @@ function Contact() {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
 
-  const isLoggedIn = false; 
+  const isLoggedIn = true; 
   const isMobile = window.innerWidth <= 768;
 
   const handleChange = (e) => {
