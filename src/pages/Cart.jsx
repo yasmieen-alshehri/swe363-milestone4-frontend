@@ -10,7 +10,7 @@ import soap from "../assets/soap-bliss.png";
 function Cart() {
   const navigate = useNavigate();
   const isMobile = window.innerWidth <= 768;
-  const isLoggedIn = false;
+  const isLoggedIn = true;
 
   const allProducts = [
     {
@@ -377,7 +377,7 @@ function Cart() {
 
           <div style={{ marginTop: "16px" }}>
             <Button
-              text="Check out"
+              text="Checkout"
               variant="purple"
               style={{ width: "100%" }}
               onClick={handleCheckout}

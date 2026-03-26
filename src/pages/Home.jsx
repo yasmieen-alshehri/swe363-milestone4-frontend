@@ -5,23 +5,92 @@ import bubble7 from "../assets/bubble7.png";
 import bubble8 from "../assets/bubble8.png";
 import heart from "../assets/heart.png";
 import heartFilled from "../assets/heart-filled.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
 
+  const isLoggedIn = true;
+
+  const product = {
+    id: 1,
+    name: "Sakura Bliss",
+  };
+
   const [liked, setLiked] = useState(false);
+  const [cartMessage, setCartMessage] = useState("");
 
-  const isLoggedIn = false; 
+  useEffect(() => {
+    const storedWishlist =
+      JSON.parse(localStorage.getItem("wishlistItems")) || [];
 
+    const isLiked = storedWishlist.some((item) => item.id === product.id);
+    setLiked(isLiked);
+  }, []);
+
+  // ❤️ Wishlist
   const handleWishlist = () => {
     if (!isLoggedIn) {
       alert("Please login first");
       return;
     }
 
-    setLiked(!liked);
+    let storedWishlist =
+      JSON.parse(localStorage.getItem("wishlistItems")) || [];
+
+    const exists = storedWishlist.find((item) => item.id === product.id);
+
+    if (exists) {
+      storedWishlist = storedWishlist.filter(
+        (item) => item.id !== product.id
+      );
+      setLiked(false);
+    } else {
+      storedWishlist.push({
+        id: product.id,
+        quantity: 1,
+      });
+      setLiked(true);
+    }
+
+    localStorage.setItem("wishlistItems", JSON.stringify(storedWishlist));
+  };
+
+  // 🛒 Cart
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      alert("Please login first");
+      return;
+    }
+
+    let storedCart =
+      JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    const existingItem = storedCart.find(
+      (item) => item.id === product.id
+    );
+
+    if (existingItem) {
+      storedCart = storedCart.map((item) =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    } else {
+      storedCart.push({
+        id: product.id,
+        quantity: 1,
+      });
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(storedCart));
+
+    setCartMessage("Added to cart");
+
+    setTimeout(() => {
+      setCartMessage("");
+    }, 2000);
   };
 
   return (
@@ -76,7 +145,6 @@ function Home() {
           zIndex: 2,
         }}
       >
-        
         <img
           src={rose}
           alt="Bubble Soap"
@@ -89,37 +157,56 @@ function Home() {
           }}
         />
 
+        {/* الأزرار */}
         <div
           style={{
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
             gap: "12px",
             flexWrap: "wrap",
             justifyContent: "center",
             marginTop: "-50px",
           }}
         >
-          {/* Add to Cart */}
-          <Button
-            text="Add to Cart"
-            variant="primary"
-            onClick={() => {
-              if (!isLoggedIn) {
-                alert("Please login first");
-              } else {
-                alert("Added to cart");
-              }
+          {/* 🛒 Add to Cart + Message */}
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
-          />
+          >
+            <Button
+              text="Add to Cart"
+              variant="primary"
+              onClick={handleAddToCart}
+            />
 
-          {/* More Details */}
+            {cartMessage && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "110%",
+                  color: "#226944",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {cartMessage}
+              </span>
+            )}
+          </div>
+
+          {/* 📄 Details */}
           <Button
             text="More Details"
             variant="secondary"
             onClick={() => navigate("/product-details/1")}
           />
 
-          {/* ❤️ Heart */}
+          {/* ❤️ Wishlist */}
           <img
             src={liked ? heartFilled : heart}
             alt="wishlist"
@@ -131,6 +218,7 @@ function Home() {
               transition: "0.3s",
               transform: liked ? "scale(1.2)" : "scale(1)",
               opacity: liked ? 1 : 0.7,
+              marginTop: "12px",
             }}
           />
         </div>

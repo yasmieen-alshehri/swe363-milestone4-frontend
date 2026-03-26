@@ -19,7 +19,7 @@ function ProductDetails() {
     const [reviewText, setReviewText] = useState("");
     const [liked, setLiked] = useState(false);
 
-    const isLoggedIn = false;
+    const isLoggedIn = true;
 
     useEffect(() => {
         const handleResize = () => {

@@ -104,7 +104,7 @@ function Navbar() {
           <img
             src={cart}
             alt="Cart"
-            onClick={() => navigate("/checkout")}
+            onClick={() => navigate("/cart")}
             style={{
               width: isMobile ? "20px" : "24px",
               objectFit: "contain",
