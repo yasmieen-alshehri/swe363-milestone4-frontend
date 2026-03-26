@@ -1,3 +1,4 @@
+// Reusable input component
 function Input({
   label,
   type = "text",
@@ -9,6 +10,7 @@ function Input({
   textarea = false,
   rows = 5,
 }) {
+  // Shared input styles
   const commonStyle = {
     width: "100%",
     padding: "12px 14px",
@@ -21,6 +23,7 @@ function Input({
     background: "white",
   };
 
+  // Render input or textarea
   return (
     <div style={{ width: "100%" }}>
       <label
@@ -53,7 +56,7 @@ function Input({
           style={commonStyle}
         />
       )}
-
+      {/* Show error message */}
       {error && (
         <p
           style={{

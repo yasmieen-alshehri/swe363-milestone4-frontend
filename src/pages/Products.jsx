@@ -1,12 +1,15 @@
+// Products page - shows all products with filters
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import rose from "../assets/rose.png";
 import lavender from "../assets/lavender.png";
+import rosemary from "../assets/rosemary.png";
 
 
 function Products() {
+  // List of all products
   const allProducts = [
     {
       id: 1,
@@ -17,6 +20,7 @@ function Products() {
       skinType: "Normal",
       inStock: true,
       customizable: false,
+      theme: "pink",
     },
     {
       id: 2,
@@ -27,9 +31,22 @@ function Products() {
       skinType: "Normal",
       inStock: false,
       customizable: false,
+      theme: "purple",
     },
     {
       id: 3,
+      name: "Rosemary Bliss",
+      price: 50,
+      image: rosemary,
+      scent: "Rose",
+      skinType: "Normal",
+      inStock: true,
+      customizable: false,
+      theme: "yellow",
+    },
+
+    {
+      id: 4,
       name: "Soap Bliss",
       price: null,
       image: null,
@@ -38,16 +55,20 @@ function Products() {
       inStock: true,
       customizable: true,
     },
+
   ];
 
+  // Filter states
   const [selectedScents, setSelectedScents] = useState([]);
   const [selectedSkinTypes, setSelectedSkinTypes] = useState([]);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(100);
   const [filteredProducts, setFilteredProducts] = useState(allProducts);
 
-  const isLoggedIn = false;
+  // Simulated login state (change for testing)
+  const isLoggedIn = true;
 
+  // Handle checkbox selection (add/remove)
   const handleCheckboxChange = (value, selectedValues, setSelectedValues) => {
     if (selectedValues.includes(value)) {
       setSelectedValues(selectedValues.filter((item) => item !== value));
@@ -56,12 +77,15 @@ function Products() {
     }
   };
 
+  // Apply filters to products
   const applyFilters = () => {
+    // Check if price range is valid
     if (minPrice !== "" && maxPrice !== "" && Number(minPrice) > Number(maxPrice)) {
       alert("Invalid price range");
       return;
     }
 
+    // Filter products based on selected options
     const result = allProducts.filter((product) => {
       const matchesPrice =
         product.price == null ||
@@ -77,9 +101,11 @@ function Products() {
       return matchesPrice && matchesScent && matchesSkinType;
     });
 
+    // Update displayed products
     setFilteredProducts(result);
   };
 
+  // Handle wishlist button click
   const handleWishlistClick = () => {
     if (!isLoggedIn) {
       alert("Please login first");
@@ -332,6 +358,7 @@ function Products() {
                   paddingRight: "4px",
                 }}
               >
+                {/* Render each product card */}
                 {filteredProducts.map((product) => (
                   <Card
                     key={product.id}

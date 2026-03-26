@@ -15,16 +15,23 @@ body {
   font-family: 'Josefin Sans', sans-serif;
 }
 
-/* 🌸 pink pages */
+/* pink pages */
 .pink-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #b45f69, #d8a0aa);
 }
 
-/* 💜 purple pages */
+/* purple pages */
 .purple-page {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--purple-1), var(--purple-2));
+  position: relative;
+  overflow: hidden;
+}
+/* yellow pages */
+.yellow-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #d8b64f, #f3df8f);
   position: relative;
   overflow: hidden;
 }
@@ -86,6 +93,43 @@ body {
   white-space: nowrap;
   cursor: not-allowed;
   opacity: 0.8;
+}
+
+.yellow-page::before,
+.yellow-page::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.yellow-page::before {
+  width: 420px;
+  height: 420px;
+  top: 80px;
+  left: -80px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255,255,255,0.6),
+    rgba(255,255,255,0.1) 60%,
+    transparent 75%
+  );
+  opacity: 0.4;
+}
+
+.yellow-page::after {
+  width: 380px;
+  height: 380px;
+  top: 0;
+  right: -60px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255,255,255,0.5),
+    rgba(255,255,255,0.1) 60%,
+    transparent 75%
+  );
+  opacity: 0.4;
 }
 
 .btn-primary {

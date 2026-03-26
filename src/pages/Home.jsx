@@ -1,13 +1,108 @@
+// Home page - shows main product and actions (cart + wishlist)
+
 import Navbar from "../components/Navbar";
 import Button from "../components/Button";
 import rose from "../assets/rose.png";
 import bubble7 from "../assets/bubble7.png";
 import bubble8 from "../assets/bubble8.png";
 import heart from "../assets/heart.png";
+import heartFilled from "../assets/heart-filled.png";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
+
+  // Simulated login state (change for testing)
+  const isLoggedIn = true;
+
+  const product = {
+    id: 1,
+    name: "Sakura Bliss",
+  };
+
+  const [liked, setLiked] = useState(false);
+  const [cartMessage, setCartMessage] = useState("");
+
+// Check if product is already in wishlist
+  useEffect(() => {
+    const storedWishlist =
+      JSON.parse(localStorage.getItem("wishlistItems")) || [];
+
+    const isLiked = storedWishlist.some((item) => item.id === product.id);
+    setLiked(isLiked);
+  }, []);
+
+// Add or remove product from wishlist
+  const handleWishlist = () => {
+    if (!isLoggedIn) {
+      alert("Please login first");
+      return;
+    }
+
+    let storedWishlist =
+      JSON.parse(localStorage.getItem("wishlistItems")) || [];
+
+    const exists = storedWishlist.find((item) => item.id === product.id);
+
+    if (exists) {
+      storedWishlist = storedWishlist.filter(
+        (item) => item.id !== product.id
+      );
+      setLiked(false);
+    } else {
+      storedWishlist.push({
+        id: product.id,
+        quantity: 1,
+      });
+      setLiked(true);
+    }
+
+    localStorage.setItem("wishlistItems", JSON.stringify(storedWishlist));
+  };
+
+// Add product to cart
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      alert("Please login first");
+      return;
+    }
+
+    // Get cart from localStorage
+
+    let storedCart =
+      JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    const existingItem = storedCart.find(
+      (item) => item.id === product.id
+    );
+
+    if (existingItem) {
+      storedCart = storedCart.map((item) =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    } else {
+      storedCart.push({
+        id: product.id,
+        quantity: 1,
+      });
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(storedCart));
+
+    // Show message when item is added
+    setCartMessage("Added to cart");
+
+    setTimeout(() => {
+      setCartMessage("");
+    }, 2000);
+  };
+
   return (
-    <div className="pink-page"
+    <div
+      className="pink-page"
       style={{
         minHeight: "100vh",
         position: "relative",
@@ -72,27 +167,63 @@ function Home() {
         <div
           style={{
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
             gap: "12px",
             flexWrap: "wrap",
             justifyContent: "center",
             marginTop: "-50px",
           }}
         >
-          <Button text="Add to Cart" variant="primary" />
-          <Button text="More Details" variant="secondary" />
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              text="Add to Cart"
+              variant="primary"
+              onClick={handleAddToCart}
+            />
 
-          {/* heart icon */}
+            {cartMessage && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "110%",
+                  color: "#226944",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {cartMessage}
+              </span>
+            )}
+          </div>
+
+          {/* Details */}
+          <Button
+            text="More Details"
+            variant="secondary"
+            onClick={() => navigate("/product-details/1")}
+          />
+
+          {/* Wishlist */}
           <img
-            src={heart}
+            src={liked ? heartFilled : heart}
             alt="wishlist"
-            onClick={() => alert("Please login first")}
+            onClick={handleWishlist}
             style={{
               width: "22px",
               height: "22px",
               cursor: "pointer",
-              opacity: 0.7,
               transition: "0.3s",
+              transform: liked ? "scale(1.2)" : "scale(1)",
+              opacity: liked ? 1 : 0.7,
+              marginTop: "12px",
             }}
           />
         </div>

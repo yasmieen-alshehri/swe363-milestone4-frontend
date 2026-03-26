@@ -1,22 +1,49 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import soap from "../assets/soap-bliss.png";
 
 function Customize() {
     const navigate = useNavigate();
 
+    // Selected options state
     const [selectedScents, setSelectedScents] = useState([]);
     const [selectedTexture, setSelectedTexture] = useState("");
     const [selectedIngredients, setSelectedIngredients] = useState([]);
     const [addedToCart, setAddedToCart] = useState(false);
 
-    const scents = ["Lavender", "Sakura", "Coconut", "Unscented", "Rose", "Honey"];
-    const textures = ["Smooth", "Scrub"];
-    const ingredients = ["xxxxx", "xxxxx", "Sugar", "Other stuff", "Milk", "Love"];
+    // Available scents
+    const scents = [
+        { name: "Lavender", price: 1 },
+        { name: "Sakura", price: 1 },
+        { name: "Coconut", price: 1 },
+        { name: "Unscented", price: 0 },
+        { name: "Rose", price: 1 },
+        { name: "Honey", price: 2 },
+    ];
+
+    // Available textures
+    const textures = [
+        { name: "Smooth", price: 0 },
+        { name: "Scrub", price: 2 },
+    ];
+
+    // Available ingredients
+    const ingredients = [
+        { name: "Shea Butter", price: 2 },
+        { name: "Aloe Vera", price: 2 },
+        { name: "Sugar", price: 1 },
+        { name: "Other Stuff", price: 2 },
+        { name: "Milk", price: 1 },
+        { name: "Love", price: 1 },
+    ];
 
     const isMobile = window.innerWidth <= 768;
-    const isLoggedIn = false;
 
+    // Simulated login state (change for testing)
+    const isLoggedIn = true;
+
+    // Handle multi-select options
     const toggleMultiSelect = (value, selectedValues, setSelectedValues) => {
         if (selectedValues.includes(value)) {
             setSelectedValues(selectedValues.filter((item) => item !== value));
@@ -26,14 +53,39 @@ function Customize() {
         setAddedToCart(false);
     };
 
+    // Handle texture selection
     const handleTextureChange = (texture) => {
         setSelectedTexture(texture);
         setAddedToCart(false);
     };
 
-    const isValid = selectedScents.length > 0 && selectedTexture !== "";
-    const price = 7.0;
+    // Check if all required options are selected
+    const isValid =
+        selectedScents.length > 0 &&
+        selectedTexture !== "" &&
+        selectedIngredients.length > 0;
 
+    const basePrice = 7;
+
+    const selectedTexturePrice =
+        textures.find((item) => item.name === selectedTexture)?.price || 0;
+
+    const selectedScentsPrice = scents
+        .filter((item) => selectedScents.includes(item.name))
+        .reduce((sum, item) => sum + item.price, 0);
+
+    const selectedIngredientsPrice = ingredients
+        .filter((item) => selectedIngredients.includes(item.name))
+        .reduce((sum, item) => sum + item.price, 0);
+
+    // Calculate total price
+    const price =
+        basePrice +
+        selectedTexturePrice +
+        selectedScentsPrice +
+        selectedIngredientsPrice;
+
+    // Add customized product to cart
     const handleAddToCart = () => {
         if (!isValid) {
             setAddedToCart(false);
@@ -45,6 +97,42 @@ function Customize() {
             return;
         }
 
+        // Get cart from localStorage
+        const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+        const customOptions = {
+            scents: selectedScents,
+            texture: selectedTexture,
+            ingredients: selectedIngredients,
+        };
+
+        const existingItemIndex = storedCart.findIndex(
+            (item) =>
+                item.id === 4 &&
+                JSON.stringify(item.customOptions) === JSON.stringify(customOptions)
+        );
+
+        let updatedCart;
+
+        if (existingItemIndex !== -1) {
+            updatedCart = [...storedCart];
+            updatedCart[existingItemIndex] = {
+                ...updatedCart[existingItemIndex],
+                quantity: updatedCart[existingItemIndex].quantity + 1,
+            };
+        } else {
+            const customProduct = {
+                id: 4,
+                customId: Date.now().toString(),
+                quantity: 1,
+                customPrice: price,
+                customOptions,
+            };
+
+            updatedCart = [...storedCart, customProduct];
+        }
+
+        localStorage.setItem("cartItems", JSON.stringify(updatedCart));
         setAddedToCart(true);
     };
 
@@ -134,10 +222,11 @@ function Customize() {
 
                             {scents.map((scent) => (
                                 <label
-                                    key={scent}
+                                    key={scent.name}
                                     style={{
                                         display: "flex",
                                         alignItems: "center",
+                                        justifyContent: "space-between",
                                         gap: "8px",
                                         marginBottom: "14px",
                                         fontSize: "15px",
@@ -145,18 +234,24 @@ function Customize() {
                                         cursor: "pointer",
                                     }}
                                 >
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedScents.includes(scent)}
-                                        onChange={() =>
-                                            toggleMultiSelect(
-                                                scent,
-                                                selectedScents,
-                                                setSelectedScents
-                                            )
-                                        }
-                                    />
-                                    {scent}
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedScents.includes(scent.name)}
+                                            onChange={() =>
+                                                toggleMultiSelect(
+                                                    scent.name,
+                                                    selectedScents,
+                                                    setSelectedScents
+                                                )
+                                            }
+                                        />
+                                        {scent.name}
+                                    </div>
+
+                                    <span style={{ fontSize: "14px", color: "#666" }}>
+                                        +${scent.price}
+                                    </span>
                                 </label>
                             ))}
                         </div>
@@ -184,10 +279,11 @@ function Customize() {
 
                             {textures.map((texture) => (
                                 <label
-                                    key={texture}
+                                    key={texture.name}
                                     style={{
                                         display: "flex",
                                         alignItems: "center",
+                                        justifyContent: "space-between",
                                         gap: "8px",
                                         marginBottom: "16px",
                                         fontSize: "15px",
@@ -195,13 +291,19 @@ function Customize() {
                                         cursor: "pointer",
                                     }}
                                 >
-                                    <input
-                                        type="radio"
-                                        name="texture"
-                                        checked={selectedTexture === texture}
-                                        onChange={() => handleTextureChange(texture)}
-                                    />
-                                    {texture}
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                        <input
+                                            type="radio"
+                                            name="texture"
+                                            checked={selectedTexture === texture.name}
+                                            onChange={() => handleTextureChange(texture.name)}
+                                        />
+                                        {texture.name}
+                                    </div>
+
+                                    <span style={{ fontSize: "14px", color: "#666" }}>
+                                        +${texture.price}
+                                    </span>
                                 </label>
                             ))}
                         </div>
@@ -229,12 +331,13 @@ function Customize() {
                             Ingredients
                         </h3>
 
-                        {ingredients.map((ingredient, index) => (
+                        {ingredients.map((ingredient) => (
                             <label
-                                key={`${ingredient}-${index}`}
+                                key={ingredient.name}
                                 style={{
                                     display: "flex",
                                     alignItems: "center",
+                                    justifyContent: "space-between",
                                     gap: "8px",
                                     marginBottom: "16px",
                                     fontSize: "15px",
@@ -242,18 +345,24 @@ function Customize() {
                                     cursor: "pointer",
                                 }}
                             >
-                                <input
-                                    type="checkbox"
-                                    checked={selectedIngredients.includes(`${ingredient}-${index}`)}
-                                    onChange={() =>
-                                        toggleMultiSelect(
-                                            `${ingredient}-${index}`,
-                                            selectedIngredients,
-                                            setSelectedIngredients
-                                        )
-                                    }
-                                />
-                                {ingredient}
+                                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedIngredients.includes(ingredient.name)}
+                                        onChange={() =>
+                                            toggleMultiSelect(
+                                                ingredient.name,
+                                                selectedIngredients,
+                                                setSelectedIngredients
+                                            )
+                                        }
+                                    />
+                                    {ingredient.name}
+                                </div>
+
+                                <span style={{ fontSize: "14px", color: "#666" }}>
+                                    +${ingredient.price}
+                                </span>
                             </label>
                         ))}
                     </div>
@@ -268,15 +377,34 @@ function Customize() {
                         width: isMobile ? "100%" : "auto",
                     }}
                 >
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            marginTop: "20px",
+                            marginBottom: "12px",
+                        }}
+                    >
+                        <img
+                            src={soap}
+                            alt="Custom Soap"
+                            style={{
+                                width: "300px",
+                                height: "300px",
+                                objectFit: "contain",
+                            }}
+                        />
+                    </div>
+
                     {!isValid && (
                         <p
                             style={{
                                 color: "#ff5a45",
                                 fontSize: isMobile ? "18px" : "22px",
                                 fontWeight: "500",
-                                textAlign: isMobile ? "left" : "center",
-                                marginTop: isMobile ? "10px" : "160px",
-                                marginBottom: isMobile ? "20px" : "0",
+                                textAlign: "center",
+                                marginTop: "0",
+                                marginBottom: "10px",
                             }}
                         >
                             Please select all required options
@@ -296,7 +424,7 @@ function Customize() {
                         >
                             <div
                                 style={{
-                                    width: "160px",
+                                    width: "180px",
                                     padding: "16px 18px",
                                     borderRadius: "999px",
                                     background: "rgba(255,255,255,0.16)",
@@ -319,6 +447,7 @@ function Customize() {
                                     flexWrap: "wrap",
                                 }}
                             >
+                                {/* Show message when added */}
                                 {addedToCart && isValid && (
                                     <p
                                         style={{
@@ -390,6 +519,7 @@ function Customize() {
                             marginBottom: "10px",
                         }}
                     >
+                        {/* Display price */}
                         Price: ${price.toFixed(2)}
                     </div>
 

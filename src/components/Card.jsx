@@ -1,9 +1,75 @@
+// Product card component
 import Button from "./Button";
 import heart from "../assets/heart.png";
+import heartFilled from "../assets/heart-filled.png";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-function Card({ product, onWishlistClick }) {
+function Card({ product }) {
     const navigate = useNavigate();
+    const [liked, setLiked] = useState(false);
+
+    // Simulated login state (change for testing)
+    const isLoggedIn = true;
+
+    // Check if product is in wishlist
+    useEffect(() => {
+        const storedWishlist =
+            JSON.parse(localStorage.getItem("wishlistItems")) || [];
+
+        const exists = storedWishlist.some((item) => item.id === product.id);
+        setLiked(exists);
+    }, [product.id]);
+
+    // Toggle wishlist
+    const handleWishlistClick = () => {
+        if (!isLoggedIn) {
+            alert("Please login first");
+            return;
+        }
+
+        const storedWishlist =
+            JSON.parse(localStorage.getItem("wishlistItems")) || [];
+
+        const exists = storedWishlist.some((item) => item.id === product.id);
+
+        let updatedWishlist;
+
+        if (exists) {
+            updatedWishlist = storedWishlist.filter((item) => item.id !== product.id);
+            setLiked(false);
+        } else {
+            updatedWishlist = [...storedWishlist, { id: product.id, quantity: 1 }];
+            setLiked(true);
+        }
+
+        localStorage.setItem("wishlistItems", JSON.stringify(updatedWishlist));
+    };
+    // Add product to cart
+    const handleAddToCart = () => {
+        if (!isLoggedIn) {
+            alert("Please login first");
+            return;
+        }
+
+        const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const existingItem = storedCart.find((item) => item.id === product.id);
+
+        let updatedCart;
+
+        if (existingItem) {
+            updatedCart = storedCart.map((item) =>
+                item.id === product.id
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
+            );
+        } else {
+            updatedCart = [...storedCart, { id: product.id, quantity: 1 }];
+        }
+
+        localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+        alert(`${product.name} added to cart`);
+    };
 
     return (
         <div
@@ -23,18 +89,24 @@ function Card({ product, onWishlistClick }) {
                     display: "flex",
                     justifyContent: "flex-start",
                     marginBottom: "10px",
+                    height: "24px",
                 }}
             >
-                <img
-                    src={heart}
-                    alt="wishlist"
-                    onClick={onWishlistClick}
-                    style={{
-                        width: "24px",
-                        height: "24px",
-                        cursor: "pointer",
-                    }}
-                />
+                {/* Wishlist icon */}
+                {!product.customizable && (
+                    <img
+                        src={liked ? heartFilled : heart}
+                        alt="wishlist"
+                        onClick={handleWishlistClick}
+                        style={{
+                            width: "24px",
+                            height: "24px",
+                            cursor: "pointer",
+                            transition: "all 0.2s ease",
+                            transform: liked ? "scale(1.2)" : "scale(1)",
+                        }}
+                    />
+                )}
             </div>
 
             <div
@@ -102,6 +174,7 @@ function Card({ product, onWishlistClick }) {
                     marginTop: "20px",
                 }}
             >
+                {/* Customize product */}
                 {product.customizable ? (
                     <Button
                         text="Customize"
@@ -113,14 +186,22 @@ function Card({ product, onWishlistClick }) {
                         <Button
                             text="Add to Cart"
                             variant="purple"
-                            onClick={() => alert("Please login first")}
+                            onClick={handleAddToCart}
                         />
-                        <Button text="Product details" variant="purple" />
+                        <Button
+                            text="Product Details"
+                            variant="purple"
+                            onClick={() => navigate(`/product-details/${product.id}`)}
+                        />
                     </>
                 ) : (
                     <>
                         <Button text="Out Of Stock" variant="purpleDisabled" disabled />
-                        <Button text="Product details" variant="purple" />
+                        <Button
+                            text="Product Details"
+                            variant="purple"
+                            onClick={() => navigate(`/product-details/${product.id}`)}
+                        />
                     </>
                 )}
             </div>

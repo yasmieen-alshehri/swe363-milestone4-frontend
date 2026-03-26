@@ -4,6 +4,8 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 
 function Contact() {
+
+  // Form data state
   const [form, setForm] = useState({
     fullName: "",
     orderId: "",
@@ -13,12 +15,17 @@ function Contact() {
     message: "",
   });
 
+  // Validation errors
   const [errors, setErrors] = useState({});
+
+  // Success message
   const [successMessage, setSuccessMessage] = useState("");
 
-  const isLoggedIn = false;
+  // Simulated login state (change for testing)
+  const isLoggedIn = true;
   const isMobile = window.innerWidth <= 768;
 
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -36,6 +43,7 @@ function Contact() {
     setSuccessMessage("");
   };
 
+  // Validate form inputs
   const validateForm = () => {
     const newErrors = {};
 
@@ -43,19 +51,36 @@ function Contact() {
       newErrors.login = "Please log in to submit a ticket";
     }
 
-    if (
-      form.subject.toLowerCase().includes("refund") ||
-      form.subject.toLowerCase().includes("return")
-    ) {
-      if (!/^\d+$/.test(form.orderId)) {
-        newErrors.orderId = "Invalid order ID";
-      }
+    // Full Name: required + no numbers
+    if (!form.fullName.trim()) {
+      newErrors.fullName = "Name is required";
+    } else if (/\d/.test(form.fullName)) {
+      newErrors.fullName = "Name cannot contain numbers";
     }
 
+    // Email
+    if (!form.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    // Phone: numbers only
+    if (form.phone && !/^\d+$/.test(form.phone)) {
+      newErrors.phone = "Phone must contain only numbers";
+    }
+
+    // Order ID: numbers only
+    if (form.orderId && !/^\d+$/.test(form.orderId)) {
+      newErrors.orderId = "Order ID must be numbers only";
+    }
+
+    // Subject
     if (!form.subject.trim()) {
       newErrors.subject = "Subject cannot be empty";
     }
 
+    // Message
     if (!form.message.trim()) {
       newErrors.message = "Message cannot be empty";
     }
@@ -63,6 +88,7 @@ function Contact() {
     return newErrors;
   };
 
+  // Submit form
   const handleSubmit = () => {
     const newErrors = validateForm();
     setErrors(newErrors);
@@ -86,6 +112,7 @@ function Contact() {
 
   return (
     <div className="purple-page" style={{ minHeight: "100vh" }}>
+      {/* Contact form */}
       <div
         style={{
           position: "relative",
@@ -107,7 +134,6 @@ function Contact() {
             marginTop: "30px",
           }}
         >
-          {/* FAQ Section */}
           <div
             style={{
               width: isMobile ? "100%" : "32%",
@@ -181,7 +207,6 @@ function Contact() {
             </div>
           </div>
 
-          {/* Contact Form */}
           <div
             style={{
               flex: 1,
@@ -213,7 +238,7 @@ function Contact() {
                   color: "#ff5a45",
                   fontSize: isMobile ? "14px" : "16px",
                   textAlign: isMobile ? "left" : "center",
-                  marginTop: "0",
+                  marginTop: 0,
                   marginBottom: "18px",
                   fontWeight: "500",
                 }}
@@ -236,6 +261,7 @@ function Contact() {
                 placeholder="Username"
                 value={form.fullName}
                 onChange={handleChange}
+                error={errors.fullName}
               />
 
               <Input
@@ -254,6 +280,7 @@ function Contact() {
                 placeholder="username123@gmail.com"
                 value={form.email}
                 onChange={handleChange}
+                error={errors.email}
               />
 
               <Input
@@ -262,6 +289,7 @@ function Contact() {
                 placeholder="12312312312"
                 value={form.phone}
                 onChange={handleChange}
+                error={errors.phone}
               />
             </div>
 
@@ -298,6 +326,7 @@ function Contact() {
                 gap: "12px",
               }}
             >
+              {/* Submit button */}
               <Button
                 text="Submit"
                 variant="purple"
@@ -306,7 +335,7 @@ function Contact() {
                 }}
                 onClick={handleSubmit}
               />
-
+              {/* Show success message */}
               {successMessage && (
                 <p
                   style={{
