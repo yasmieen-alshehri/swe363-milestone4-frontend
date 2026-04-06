@@ -67,21 +67,22 @@ function Checkout() {
   const [orderError, setOrderError] = useState("");
   const [locationLoading, setLocationLoading] = useState(false);
 
-  // Load cart and saved profile
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    const savedProfile = JSON.parse(localStorage.getItem("checkoutProfile")) || {
-      fullName: "",
-      email: "",
-      phone: "",
-      location: "",
-    };
+
+    const savedProfile =
+      JSON.parse(localStorage.getItem("checkoutProfile")) ||
+      JSON.parse(localStorage.getItem("profileData")) || {
+        fullName: "",
+        email: "",
+        phone: "",
+        location: "",
+      };
 
     setCartItems(storedCart);
     setForm(savedProfile);
   }, []);
 
-  // Merge cart items with product details
   const cartWithDetails = cartItems
     .map((item) => {
       const product = allProducts.find((p) => p.id === item.id);
@@ -96,16 +97,13 @@ function Checkout() {
     })
     .filter(Boolean);
 
-  // Calculate subtotal
   const subtotal = cartWithDetails.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
 
-  // Calculate total after discount
   const total = Math.max(subtotal - discountAmount, 0);
 
-  // Apply discount code
   const handleDiscountApply = () => {
     setDiscountMessage("");
     setDiscountError("");
@@ -129,7 +127,6 @@ function Checkout() {
     setDiscountError("Invalid discount code");
   };
 
-  // Handle form input change
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -163,7 +160,6 @@ function Checkout() {
     }
   };
 
-  // Get user location
   const getLocation = () => {
     setSaveMessage("");
     setFormError("");
@@ -195,10 +191,11 @@ function Checkout() {
     );
   };
 
-  // Save user profile
   const handleSave = () => {
     setSaveMessage("");
     setFormError("");
+    setEmailError("");
+    setPhoneError("");
 
     if (!form.fullName || !form.email || !form.phone || !form.location) {
       setFormError("Please fill all shipping information");
@@ -218,14 +215,20 @@ function Checkout() {
     }
 
     localStorage.setItem("checkoutProfile", JSON.stringify(form));
+    localStorage.setItem("profileData", JSON.stringify(form));
     setSaveMessage("Saved!");
   };
 
-  // Confirm order
+  const generateOrderId = () => {
+    return `#${Math.floor(1000 + Math.random() * 9000)}`;
+  };
+
   const handlePayConfirm = () => {
     setOrderMessage("");
     setOrderError("");
     setFormError("");
+    setEmailError("");
+    setPhoneError("");
 
     if (cartWithDetails.length === 0) {
       setOrderError("Cart is empty");
@@ -249,9 +252,39 @@ function Checkout() {
       return;
     }
 
-    setOrderMessage("Order placed successfully");
+    const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    const newOrders = cartWithDetails.map((item) => ({
+      id: generateOrderId(),
+      date: new Date().toISOString(),
+      item: item.name,
+      total: item.price * item.quantity,
+      status: "Shipped",
+      productId: item.id,
+      quantity: item.quantity,
+      customer: {
+        fullName: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        location: form.location,
+      },
+    }));
+
+    localStorage.setItem(
+      "orders",
+      JSON.stringify([...newOrders, ...existingOrders])
+    );
+
+    localStorage.setItem("checkoutProfile", JSON.stringify(form));
+    localStorage.setItem("profileData", JSON.stringify(form));
     localStorage.removeItem("cartItems");
+
     setCartItems([]);
+    setDiscountCode("");
+    setDiscountAmount(0);
+    setDiscountMessage("");
+    setDiscountError("");
+    setOrderMessage("Order placed successfully");
   };
 
   return (
@@ -277,7 +310,7 @@ function Checkout() {
           pointerEvents: "none",
         }}
       />
-      {/* Go back */}
+
       <button
         onClick={() => navigate(-1)}
         style={{
@@ -407,7 +440,7 @@ function Checkout() {
                     <th style={thStyle}>Subtotal</th>
                   </tr>
                 </thead>
-                {/* Display cart items */}
+
                 <tbody>
                   {cartWithDetails.length > 0 ? (
                     cartWithDetails.map((item) => (
@@ -452,7 +485,6 @@ function Checkout() {
                 marginBottom: "12px",
               }}
             >
-              {/* User information */}
               <h2
                 style={{
                   margin: 0,

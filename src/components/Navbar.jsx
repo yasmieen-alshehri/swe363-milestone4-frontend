@@ -120,11 +120,13 @@ function Navbar() {
           <img
             src={profile}
             alt="Profile"
+            onClick={() => navigate("/profile")}
             style={{
               width: isMobile ? "26px" : "34px",
               height: isMobile ? "26px" : "34px",
               borderRadius: "50%",
               objectFit: "cover",
+              cursor: "pointer",
             }}
           />
         </div>
