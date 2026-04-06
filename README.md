@@ -32,13 +32,26 @@ Users can explore products, add items to the cart, manage a wishlist, and comple
 
 
 1. Install dependencies:
-   npm install
+```bash
+npm install
+npm install recharts
+```
 
 2. Run the project:
-   npm run dev
+
+```bash
+npm run dev
+```
 
 3. Open in browser:
    http://localhost:5173/ (or the port shown in the terminal)
+
+
+If you get a permission error (execution policy issue), run:
+
+```bash
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
 ---
 
 ## Project Structure
