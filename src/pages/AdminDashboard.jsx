@@ -214,7 +214,13 @@ function AdminDashboard() {
             Inventory Management
           </button>
           <button style={sideButtonStyle}>Promotions Management</button>
-          <button style={sideButtonStyle}>Order Management</button>
+          <button 
+            style={sideButtonStyle}
+            onClick={() => navigate("/admin/orders")}
+          >
+            Order Management
+          </button>
+
           <button 
             style={sideButtonStyle}
             onClick={() => navigate("/admin/reviews")}

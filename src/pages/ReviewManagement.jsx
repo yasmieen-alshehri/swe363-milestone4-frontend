@@ -69,7 +69,13 @@ function ReviewManagement() {
           </button>
 
           <button>Promotions Management</button>
-          <button>Order Management</button>
+
+        <button 
+            style={sideButtonStyle}
+            onClick={() => navigate("/admin/orders")}
+        >
+            Order Management
+        </button>
 
           <button className="active">Review Management</button>
 
