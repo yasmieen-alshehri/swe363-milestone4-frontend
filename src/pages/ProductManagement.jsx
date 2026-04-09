@@ -271,7 +271,12 @@ function ProductManagement() {
             </button>
             <button style={sideButtonStyle}>Promotions Management</button>
             <button style={sideButtonStyle}>Order Management</button>
-            <button style={sideButtonStyle}>Review Management</button>
+            <button 
+              style={sideButtonStyle}
+              onClick={() => navigate("/admin/reviews")}
+            >
+              Review Management
+            </button>
 
             <div
               style={{
