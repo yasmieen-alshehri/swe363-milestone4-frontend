@@ -92,6 +92,7 @@ src/
 * /order-history
 
 ### Admin Pages
+* /admin-dashboard
 * /admin/products
 * /admin/inventory
 * /admin/orders
