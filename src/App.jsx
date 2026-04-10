@@ -13,8 +13,9 @@ import SignIn from "./pages/SignIn";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProductManagement from "./pages/ProductManagement";
 import InventoryManagement from "./pages/InventoryManagement";
-import OrderManagement from "./pages/OrderManagement";
 import ReviewManagement from "./pages/ReviewManagement";
+import OrderManagement from "./pages/OrderManagement";
+import PromotionsManagement from "./pages/PromotionsManagement";
 
 function App() {
   return (
@@ -34,8 +35,9 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin/products" element={<ProductManagement />} />
         <Route path="/admin/inventory" element={<InventoryManagement />} />
-        <Route path="/admin/orders" element={<OrderManagement />} />
         <Route path="/admin/reviews" element={<ReviewManagement />} />
+        <Route path="/admin/orders" element={<OrderManagement />} />
+        <Route path="/admin/promotions" element={<PromotionsManagement />} />
       </Routes>
     </BrowserRouter>
   );

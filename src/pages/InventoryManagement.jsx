@@ -1,14 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import rose from "../assets/rose.png";
 import lavender from "../assets/lavender.png";
 import rosemary from "../assets/rosemary.png";
 import soap from "../assets/soap-bliss.png";
-import logo from "../assets/bubble-logo.png";
+import AdminSidebar from "../components/AdminSidebar";
 
 function InventoryManagement() {
-  const navigate = useNavigate();
-
   const defaultProducts = useMemo(
     () => [
       {
@@ -110,71 +107,13 @@ function InventoryManagement() {
           gap: "18px",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-          }}
-        >
-          <div style={logoCardStyle}>
-            <img
-                src={logo}
-                alt="Bubble Logo"
-                style={{
-                width: "100%",
-                maxWidth: "120px",
-                objectFit: "contain",
-                display: "block",
-                margin: "0 auto",
-                }}
-            />
-            </div>
+        <AdminSidebar activePage="inventory" />
 
-          <button
-            style={sideButtonStyle}
-            onClick={() => navigate("/admin/products")}
-          >
-            Product Management
-          </button>
-
-          <button style={{ ...sideButtonStyle, fontWeight: 700 }}>
-            Inventory Management
-          </button>
-
-          <button style={sideButtonStyle}>Promotions Management</button>
-          
-          <button 
-            style={sideButtonStyle}
-            onClick={() => navigate("/admin/orders")}
-          >
-            Order Management
-          </button>    
-
-          <button 
-            style={sideButtonStyle}
-            onClick={() => navigate("/admin/reviews")}
-          >
-            Review Management
-          </button>
-
-          <div
-            style={{
-              marginTop: "38px",
-              fontSize: "14px",
-              color: "#2e3d4c",
-              lineHeight: 1.3,
-              padding: "0 6px",
-            }}
-          >
-          </div>
-
-          <div style={{ flex: 1 }} />
-
+        <div style={mainPanelStyle}>
           {savedMessage && (
             <p
               style={{
-                margin: "0 0 6px",
+                margin: "0 0 16px",
                 color: "#ff4d6d",
                 fontSize: "13px",
                 textAlign: "center",
@@ -185,16 +124,18 @@ function InventoryManagement() {
             </p>
           )}
 
-          <button style={updateButtonStyle} onClick={handleUpdate}>
-            Update
-          </button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "18px",
+            }}
+          >
+            <button style={updateButtonStyle} onClick={handleUpdate}>
+              Update
+            </button>
+          </div>
 
-          <button style={homeButtonStyle} onClick={() => navigate("/")}>
-            Home Page
-          </button>
-        </div>
-
-        <div style={mainPanelStyle}>
           <div
             style={{
               display: "flex",
@@ -248,6 +189,48 @@ function InventoryManagement() {
               grid-template-columns: 1fr !important;
             }
           }
+
+          .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
+
+          .sidebar button {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 18px;
+            padding: 14px 12px;
+            font-family: Josefin Sans, sans-serif;
+            font-size: 18px;
+            color: #2e3d4c;
+            cursor: pointer;
+          }
+
+          .sidebar .active {
+            font-weight: 700;
+          }
+
+          .logo-card {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 24px;
+            backdrop-filter: blur(14px);
+            padding: 16px;
+            text-align: center;
+          }
+
+          .logo-card img {
+            width: 100%;
+            max-width: 120px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+          }
+
+          .spacer {
+            flex: 1;
+          }
         `}
       </style>
     </div>
@@ -287,30 +270,6 @@ const stockInputStyle = {
   color: "#2e3d4c",
 };
 
-const logoCardStyle = {
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.35)",
-  borderRadius: "24px",
-  backdropFilter: "blur(14px)",
-  padding: "16px",
-  textAlign: "center",
-  fontSize: "46px",
-  fontWeight: "700",
-  color: "#e1d6ee",
-  textShadow: "1px 1px 0 #7f6aa5",
-};
-
-const sideButtonStyle = {
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.35)",
-  borderRadius: "18px",
-  padding: "14px 12px",
-  fontFamily: "Josefin Sans, sans-serif",
-  fontSize: "18px",
-  color: "#2e3d4c",
-  cursor: "pointer",
-};
-
 const updateButtonStyle = {
   background: "#8f42d9",
   color: "white",
@@ -321,18 +280,6 @@ const updateButtonStyle = {
   fontWeight: "600",
   cursor: "pointer",
   width: "110px",
-  alignSelf: "center",
-};
-
-const homeButtonStyle = {
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.35)",
-  borderRadius: "18px",
-  padding: "14px 12px",
-  fontFamily: "Josefin Sans, sans-serif",
-  fontSize: "18px",
-  color: "#2e3d4c",
-  cursor: "pointer",
 };
 
 export default InventoryManagement;

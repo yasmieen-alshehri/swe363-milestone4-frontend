@@ -14,39 +14,17 @@ import rose from "../assets/rose.png";
 import lavender from "../assets/lavender.png";
 import rosemary from "../assets/rosemary.png";
 import soap from "../assets/soap-bliss.png";
-import { useNavigate } from "react-router-dom";
-import logo from "../assets/bubble-logo.png";
+import AdminSidebar from "../components/AdminSidebar";
 
 function AdminDashboard() {
-  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
 
   const allProducts = [
-    {
-      id: 1,
-      name: "Sakura Bliss",
-      price: 30,
-      image: rose,
-    },
-    {
-      id: 2,
-      name: "Lavender Bliss",
-      price: 30,
-      image: lavender,
-    },
-    {
-      id: 3,
-      name: "Rosemary Bliss",
-      price: 50,
-      image: rosemary,
-    },
-    {
-      id: 4,
-      name: "Soap Bliss",
-      price: 7,
-      image: soap,
-    },
+    { id: 1, name: "Sakura Bliss", price: 30, image: rose },
+    { id: 2, name: "Lavender Bliss", price: 30, image: lavender },
+    { id: 3, name: "Rosemary Bliss", price: 50, image: rosemary },
+    { id: 4, name: "Soap Bliss", price: 7, image: soap },
   ];
 
   useEffect(() => {
@@ -119,7 +97,10 @@ function AdminDashboard() {
       monthlyMap[monthKey] = (monthlyMap[monthKey] || 0) + Number(order.total || 0);
     });
 
-    const monthOrder = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthOrder = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ];
 
     return monthOrder.map((month) => ({
       month,
@@ -158,10 +139,8 @@ function AdminDashboard() {
 
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
-
     const date = new Date(dateString);
     if (Number.isNaN(date.getTime())) return dateString;
-
     return date.toLocaleDateString("en-GB");
   };
 
@@ -182,66 +161,7 @@ function AdminDashboard() {
           gap: "16px",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-          }}
-        >
-          <div style={logoCardStyle}>
-            <img
-                src={logo}
-                alt="Bubble Logo"
-                style={{
-                width: "100%",
-                maxWidth: "120px",
-                objectFit: "contain",
-                display: "block",
-                margin: "0 auto",
-                }}
-            />
-          </div>
-
-          <button
-          style={sideButtonStyle}
-          onClick={() => navigate("/admin/products")}>
-            Product Management
-          </button>
-          <button
-          style={sideButtonStyle}
-          onClick={() => navigate("/admin/inventory")}>
-            Inventory Management
-          </button>
-          <button style={sideButtonStyle}>Promotions Management</button>
-          <button 
-            style={sideButtonStyle}
-            onClick={() => navigate("/admin/orders")}
-          >
-            Order Management
-          </button>
-
-          <button 
-            style={sideButtonStyle}
-            onClick={() => navigate("/admin/reviews")}
-          >
-            Review Management
-          </button>
-
-          <div
-            style={{
-              marginTop: "18px",
-              fontSize: "13px",
-              color: "#2e3d4c",
-              lineHeight: 1.35,
-            }}
-          >
-          </div>
-
-          <div style={{ flex: 1 }} />
-
-          <button style={homeButtonStyle}>Home Page</button>
-        </div>
+        <AdminSidebar activePage="dashboard" />
 
         <div
           style={{
@@ -278,10 +198,7 @@ function AdminDashboard() {
               change="▼ unique customer count"
               changeColor="#e76b4f"
             />
-            <StatCard
-              title="Products"
-              value={totalProducts.toString()}
-            />
+            <StatCard title="Products" value={totalProducts.toString()} />
           </div>
 
           <div
@@ -352,9 +269,7 @@ function AdminDashboard() {
                       recentOrders.map((order, index) => (
                         <tr key={order.id || index}>
                           <td style={tdStyle}>{order.id || `#${1000 + index}`}</td>
-                          <td style={tdStyle}>
-                            {order.customer?.fullName || "User"}
-                          </td>
+                          <td style={tdStyle}>{order.customer?.fullName || "User"}</td>
                           <td style={tdStyle}>
                             $
                             {Number(order.total || 0).toLocaleString(undefined, {
@@ -367,13 +282,9 @@ function AdminDashboard() {
                               style={{
                                 ...statusStyle,
                                 background:
-                                  order.status === "Shipped"
-                                    ? "#b4e6b7"
-                                    : "#ffd7a6",
+                                  order.status === "Shipped" ? "#b4e6b7" : "#ffd7a6",
                                 color:
-                                  order.status === "Shipped"
-                                    ? "#2f9a3b"
-                                    : "#d87017",
+                                  order.status === "Shipped" ? "#2f9a3b" : "#d87017",
                               }}
                             >
                               {order.status || "Pending"}
@@ -564,6 +475,48 @@ function AdminDashboard() {
               grid-template-columns: 1fr !important;
             }
           }
+
+          .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
+
+          .sidebar button {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 18px;
+            padding: 14px 12px;
+            font-family: Josefin Sans, sans-serif;
+            font-size: 18px;
+            color: #2e3d4c;
+            cursor: pointer;
+          }
+
+          .sidebar .active {
+            font-weight: 700;
+          }
+
+          .logo-card {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 24px;
+            backdrop-filter: blur(14px);
+            padding: 16px;
+            text-align: center;
+          }
+
+          .logo-card img {
+            width: 100%;
+            max-width: 120px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+          }
+
+          .spacer {
+            flex: 1;
+          }
         `}
       </style>
     </div>
@@ -573,15 +526,7 @@ function AdminDashboard() {
 function StatCard({ title, value, change, changeColor }) {
   return (
     <div style={statCardStyle}>
-      <p
-        style={{
-          margin: "0 0 8px",
-          color: "#3c4352",
-          fontSize: "16px",
-        }}
-      >
-        {title}
-      </p>
+      <p style={{ margin: "0 0 8px", color: "#3c4352", fontSize: "16px" }}>{title}</p>
       <h3
         style={{
           margin: "0 0 8px",
@@ -593,13 +538,7 @@ function StatCard({ title, value, change, changeColor }) {
         {value}
       </h3>
       {change && (
-        <p
-          style={{
-            margin: 0,
-            color: changeColor || "#3ea85b",
-            fontSize: "13px",
-          }}
-        >
+        <p style={{ margin: 0, color: changeColor || "#3ea85b", fontSize: "13px" }}>
           {change}
         </p>
       )}
@@ -629,41 +568,6 @@ const statCardStyle = {
   borderRadius: "24px",
   backdropFilter: "blur(14px)",
   padding: "14px 18px",
-};
-
-const logoCardStyle = {
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.35)",
-  borderRadius: "24px",
-  backdropFilter: "blur(14px)",
-  padding: "16px",
-  textAlign: "center",
-  fontSize: "46px",
-  fontWeight: "700",
-  color: "#e1d6ee",
-  textShadow: "1px 1px 0 #7f6aa5",
-};
-
-const sideButtonStyle = {
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.35)",
-  borderRadius: "18px",
-  padding: "14px 12px",
-  fontFamily: "Josefin Sans, sans-serif",
-  fontSize: "18px",
-  color: "#2e3d4c",
-  cursor: "pointer",
-};
-
-const homeButtonStyle = {
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.35)",
-  borderRadius: "18px",
-  padding: "14px 12px",
-  fontFamily: "Josefin Sans, sans-serif",
-  fontSize: "18px",
-  color: "#2e3d4c",
-  cursor: "pointer",
 };
 
 const selectStyle = {

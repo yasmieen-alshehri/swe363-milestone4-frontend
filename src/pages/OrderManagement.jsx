@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import logo from "../assets/bubble-logo.png";
 import rose from "../assets/rose.png";
 import rosemary from "../assets/rosemary.png";
+import AdminSidebar from "../components/AdminSidebar";
 import "../styles/orderManagement.css";
 
 function OrderManagement() {
-  const navigate = useNavigate();
-
   const [orders, setOrders] = useState([
     {
       id: "#1024",
@@ -26,9 +23,7 @@ function OrderManagement() {
       amount: "$32.96",
       status: "Shipped",
       date: "14-02-2026",
-      items: [
-        { name: "Rosemary Bliss", price: "$16.48", qty: 2, image: rosemary },
-      ],
+      items: [{ name: "Rosemary Bliss", price: "$16.48", qty: 2, image: rosemary }],
     },
   ]);
 
@@ -59,31 +54,7 @@ function OrderManagement() {
   return (
     <div className="purple-page order-page">
       <div className="order-layout">
-        <div className="sidebar">
-          <div className="logo-card">
-            <img src={logo} alt="logo" />
-          </div>
-
-          <button onClick={() => navigate("/admin/products")}>
-            Product Management
-          </button>
-
-          <button onClick={() => navigate("/admin/inventory")}>
-            Inventory Management
-          </button>
-
-          <button>Promotions Management</button>
-
-          <button className="active">Order Management</button>
-
-          <button onClick={() => navigate("/admin/reviews")}>
-            Review Management
-          </button>
-
-          <div className="spacer" />
-
-          <button onClick={() => navigate("/")}>Home Page</button>
-        </div>
+        <AdminSidebar activePage="orders" />
 
         <div className="order-main">
           <div className="orders-panel">

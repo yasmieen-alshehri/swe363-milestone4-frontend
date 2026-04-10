@@ -1,16 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import rose from "../assets/rose.png";
 import lavender from "../assets/lavender.png";
 import rosemary from "../assets/rosemary.png";
 import soap from "../assets/soap-bliss.png";
-import logo from "../assets/bubble-logo.png";
 import userProfile from "../assets/profile-picture.png";
+import AdminSidebar from "../components/AdminSidebar";
 import "../styles/reviewManagement.css";
 
 function ReviewManagement() {
-  const navigate = useNavigate();
-
   const products = [
     { id: 1, name: "Sakura Bliss", image: rose },
     { id: 2, name: "Lavender Bliss", image: lavender },
@@ -55,34 +52,7 @@ function ReviewManagement() {
   return (
     <div className="purple-page review-page">
       <div className="review-layout">
-        <div className="sidebar">
-          <div className="logo-card">
-            <img src={logo} alt="Bubble Logo" />
-          </div>
-
-          <button onClick={() => navigate("/admin/products")}>
-            Product Management
-          </button>
-
-          <button onClick={() => navigate("/admin/inventory")}>
-            Inventory Management
-          </button>
-
-          <button>Promotions Management</button>
-
-        <button 
-            style={sideButtonStyle}
-            onClick={() => navigate("/admin/orders")}
-        >
-            Order Management
-        </button>
-
-          <button className="active">Review Management</button>
-
-          <div className="spacer" />
-
-          <button onClick={() => navigate("/")}>Home Page</button>
-        </div>
+        <AdminSidebar activePage="reviews" />
 
         <div className="review-main">
           <div className="products-panel">
@@ -125,9 +95,7 @@ function ReviewManagement() {
                   </div>
 
                   <button
-                    onClick={() =>
-                      handleDeleteReview(selectedProduct.id, index)
-                    }
+                    onClick={() => handleDeleteReview(selectedProduct.id, index)}
                     className="delete-review-btn"
                   >
                     🗑

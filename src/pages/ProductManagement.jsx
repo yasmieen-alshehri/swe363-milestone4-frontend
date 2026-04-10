@@ -1,14 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import rose from "../assets/rose.png";
 import lavender from "../assets/lavender.png";
 import rosemary from "../assets/rosemary.png";
 import soap from "../assets/soap-bliss.png";
-import logo from "../assets/bubble-logo.png";
+import AdminSidebar from "../components/AdminSidebar";
 
 function ProductManagement() {
-  const navigate = useNavigate();
-
   const defaultProducts = useMemo(
     () => [
       {
@@ -52,7 +49,7 @@ function ProductManagement() {
   );
 
   const [products, setProducts] = useState([]);
-  const [mode, setMode] = useState("list"); // list | add | edit
+  const [mode, setMode] = useState("list");
   const [savedMessage, setSavedMessage] = useState("");
   const [formError, setFormError] = useState("");
 
@@ -239,86 +236,7 @@ function ProductManagement() {
           gap: "18px",
         }}
       >
-        {mode !== "edit" && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-            }}
-          >
-            <div style={logoCardStyle}>
-                <img
-                    src={logo}
-                    alt="Bubble Logo"
-                    style={{
-                    width: "100%",
-                    maxWidth: "120px",
-                    objectFit: "contain",
-                    display: "block",
-                    margin: "0 auto",
-                    }}
-                />
-                </div>
-
-            <button style={{ ...sideButtonStyle, fontWeight: 700 }}>
-              Product Management
-            </button>
-            <button
-            style={sideButtonStyle}
-            onClick={() => navigate("/admin/inventory")}>
-                Inventory Management
-            </button>
-            <button style={sideButtonStyle}>Promotions Management</button>
-
-            <button 
-              style={sideButtonStyle}
-              onClick={() => navigate("/admin/orders")}
-            >
-              Order Management
-            </button>
-
-            <button 
-              style={sideButtonStyle}
-              onClick={() => navigate("/admin/reviews")}
-            >
-              Review Management
-            </button>
-
-            <div
-              style={{
-                marginTop: "12px",
-                fontSize: "13px",
-                color: "#2e3d4c",
-                lineHeight: 1.35,
-              }}
-            />
-
-            <div style={{ flex: 1 }} />
-
-            {mode === "list" && savedMessage && (
-              <p
-                style={{
-                  margin: "0 0 6px",
-                  color: "#ff4d6d",
-                  fontSize: "13px",
-                  textAlign: "center",
-                  fontWeight: "600",
-                }}
-              >
-                {savedMessage}
-              </p>
-            )}
-
-            <button style={addButtonStyle} onClick={handleAddClick}>
-              Add Product
-            </button>
-
-            <button style={homeButtonStyle} onClick={() => navigate("/")}>
-              Home Page
-            </button>
-          </div>
-        )}
+        {mode !== "edit" && <AdminSidebar activePage="products" />}
 
         <div
           style={{
@@ -335,54 +253,82 @@ function ProductManagement() {
           }}
         >
           {mode === "list" ? (
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "22px",
-                alignItems: "flex-start",
-              }}
-            >
-              {products.map((product) => (
-                <div key={product.id} style={productCardStyle}>
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    style={{
-                      width: "170px",
-                      height: "170px",
-                      objectFit: "contain",
-                      marginBottom: "12px",
-                    }}
-                  />
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <button style={addButtonStyle} onClick={handleAddClick}>
+                  Add Product
+                </button>
+              </div>
 
-                  <h3
-                    style={{
-                      margin: "0 0 28px",
-                      fontSize: "18px",
-                      color: "#2e3d4c",
-                      fontWeight: "500",
-                    }}
-                  >
-                    {product.name}
-                  </h3>
+              {savedMessage && (
+                <p
+                  style={{
+                    margin: "0 0 14px",
+                    color: "#ff4d6d",
+                    fontSize: "13px",
+                    textAlign: "center",
+                    fontWeight: "600",
+                  }}
+                >
+                  {savedMessage}
+                </p>
+              )}
 
-                  <button
-                    style={purpleButtonStyle}
-                    onClick={() => handleDelete(product.id)}
-                  >
-                    Delete
-                  </button>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "22px",
+                  alignItems: "flex-start",
+                }}
+              >
+                {products.map((product) => (
+                  <div key={product.id} style={productCardStyle}>
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      style={{
+                        width: "170px",
+                        height: "170px",
+                        objectFit: "contain",
+                        marginBottom: "12px",
+                      }}
+                    />
 
-                  <button
-                    style={{ ...purpleButtonStyle, marginTop: "10px" }}
-                    onClick={() => handleEdit(product)}
-                  >
-                    Edit Product
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <h3
+                      style={{
+                        margin: "0 0 28px",
+                        fontSize: "18px",
+                        color: "#2e3d4c",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {product.name}
+                    </h3>
+
+                    <button
+                      style={purpleButtonStyle}
+                      onClick={() => handleDelete(product.id)}
+                    >
+                      Delete
+                    </button>
+
+                    <button
+                      style={{ ...purpleButtonStyle, marginTop: "10px" }}
+                      onClick={() => handleEdit(product)}
+                    >
+                      Edit Product
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
           ) : mode === "add" ? (
             <div
               className="product-form-grid"
@@ -686,6 +632,48 @@ function ProductManagement() {
               grid-template-columns: 1fr !important;
             }
           }
+
+          .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
+
+          .sidebar button {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 18px;
+            padding: 14px 12px;
+            font-family: Josefin Sans, sans-serif;
+            font-size: 18px;
+            color: #2e3d4c;
+            cursor: pointer;
+          }
+
+          .sidebar .active {
+            font-weight: 700;
+          }
+
+          .logo-card {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 24px;
+            backdrop-filter: blur(14px);
+            padding: 16px;
+            text-align: center;
+          }
+
+          .logo-card img {
+            width: 100%;
+            max-width: 120px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+          }
+
+          .spacer {
+            flex: 1;
+          }
         `}
       </style>
     </div>
@@ -784,30 +772,6 @@ const imageSelectButtonStyle = {
   cursor: "pointer",
 };
 
-const logoCardStyle = {
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.35)",
-  borderRadius: "24px",
-  backdropFilter: "blur(14px)",
-  padding: "16px",
-  textAlign: "center",
-  fontSize: "46px",
-  fontWeight: "700",
-  color: "#e1d6ee",
-  textShadow: "1px 1px 0 #7f6aa5",
-};
-
-const sideButtonStyle = {
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.35)",
-  borderRadius: "18px",
-  padding: "14px 12px",
-  fontFamily: "Josefin Sans, sans-serif",
-  fontSize: "18px",
-  color: "#2e3d4c",
-  cursor: "pointer",
-};
-
 const addButtonStyle = {
   background: "#8f42d9",
   color: "white",
@@ -818,18 +782,6 @@ const addButtonStyle = {
   fontWeight: "600",
   cursor: "pointer",
   width: "110px",
-  alignSelf: "center",
-};
-
-const homeButtonStyle = {
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.35)",
-  borderRadius: "18px",
-  padding: "14px 12px",
-  fontFamily: "Josefin Sans, sans-serif",
-  fontSize: "18px",
-  color: "#2e3d4c",
-  cursor: "pointer",
 };
 
 const backButtonStyle = {
