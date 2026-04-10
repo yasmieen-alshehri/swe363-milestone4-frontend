@@ -4,7 +4,7 @@
 
 A web application for browsing and customizing handmade soaps.
 Users can explore products, add items to the cart, manage a wishlist, and complete the checkout process.
-
+The system also includes an Admin dashboard and a Customer Service panel for managing products, orders, reviews, tickets, and FAQs.
 ---
 
 ## Features
@@ -17,6 +17,19 @@ Users can explore products, add items to the cart, manage a wishlist, and comple
 * Checkout system
 * Responsive design (mobile and desktop)
 
+### Admin Features
+* Manage products (add, edit, delete)
+* Manage inventory
+* Manage orders and update status
+* Manage promotions and discount codes
+* Manage customer reviews
+
+### Customer Service Features
+* View and manage support tickets
+* Filter and search tickets
+* Update ticket status and refund eligibility
+* Add internal notes
+* Manage FAQ templates (add, edit, delete)
 ---
 
 ## Technologies Used
@@ -67,7 +80,29 @@ src/
 ```
 
 ---
+## Routing Overview
 
+### Customer Pages
+* /
+* /products
+* /product-details/:id
+* /cart
+* /checkout
+* /profile
+* /order-history
+
+### Admin Pages
+* /admin/products
+* /admin/inventory
+* /admin/orders
+* /admin/reviews
+* /admin/promotions
+
+### Customer Service Pages
+* /customer-service/tickets
+* /customer-service/faqs
+
+---
 ## Team Members
 
 * Yasmeen Alshehri
@@ -78,7 +113,8 @@ src/
 ---
 
 ## Notes
-
+* The system includes three roles: Customer, Admin, and Customer Service
+* Admin and Customer Service interfaces are separated from customer pages
 * Cart and wishlist data are stored using localStorage
 * Login state is simulated for testing purposes
 * Figma design will be provided separately
