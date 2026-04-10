@@ -110,10 +110,10 @@ function AdminDashboard() {
 
   const activityData = useMemo(() => {
     const customers = users.filter((user) => user.role === "user").length;
-    const suppliers = users.filter((user) => user.role === "supplier").length;
+    const customerservice = users.filter((user) => user.role === "customer-service").length;
     const admins = users.filter((user) => user.role === "admin").length;
 
-    const total = customers + suppliers + admins;
+    const total = customers + customerservice + admins;
 
     return [
       {
@@ -123,9 +123,9 @@ function AdminDashboard() {
         color: "#5b2ff5",
       },
       {
-        name: "Suppliers",
-        value: suppliers,
-        percent: total ? Math.round((suppliers / total) * 100) : 0,
+        name: "customer-service",
+        value: customerservice,
+        percent: total ? Math.round((customerservice / total) * 100) : 0,
         color: "#8e3fd6",
       },
       {

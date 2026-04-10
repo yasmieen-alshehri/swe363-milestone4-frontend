@@ -38,10 +38,10 @@ function Login() {
         {
           id: 3,
           name: "Supply One",
-          username: "supplier",
-          password: "supplier123",
-          role: "supplier",
-          email: "supplier@gmail.com",
+          username: "customerservice",
+          password: "customer123",
+          role: "customer-service",
+          email: "customerservice@gmail.com",
         },
       ];
 
@@ -78,8 +78,8 @@ function Login() {
 
     if (matchedUser.role === "admin") {
       navigate("/admin-dashboard");
-    } else if (matchedUser.role === "supplier") {
-      navigate("/supplier/dashboard");
+    } else if (matchedUser.role === "customer-service") {
+      navigate("customer-service/tickets");
     } else {
       navigate("/");
     }
@@ -278,7 +278,7 @@ function Login() {
         >
           Don&apos;t have an account yet?{" "}
           <span
-            onClick={() => navigate("/sign-in")}
+            onClick={() => navigate("/signin")}
             style={{
               cursor: "pointer",
               fontWeight: "700",
