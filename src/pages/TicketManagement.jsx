@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import rose from "../assets/rose.png";
 import rosemary from "../assets/rosemary.png";
 import logo from "../assets/bubble-logo.png";
 import "../styles/ticketManagement.css";
 
 function TicketManagement() {
+  const navigate = useNavigate();
+
   const [tickets, setTickets] = useState([
     {
       id: "#123",
@@ -122,11 +125,14 @@ function TicketManagement() {
           </div>
 
           <button className="active">Ticket Management</button>
-          <button>FAQ Templates</button>
+
+          <button onClick={() => navigate("/customer-service/faqs")}>
+            FAQ Templates
+          </button>
 
           <div className="cs-spacer" />
 
-          <button>Home Page</button>
+          <button onClick={() => navigate("/")}>Home Page</button>
         </div>
 
         <div className="ticket-main">
@@ -199,25 +205,25 @@ function TicketManagement() {
 
               <div className="ticket-info-table">
                 <div className="ticket-info-item">
-                    <div className="ticket-info-head">Full Name</div>
-                    <div className="ticket-info-value">{selectedTicket.customer}</div>
+                  <div className="ticket-info-head">Full Name</div>
+                  <div className="ticket-info-value">{selectedTicket.customer}</div>
                 </div>
 
                 <div className="ticket-info-item">
-                    <div className="ticket-info-head">Email</div>
-                    <div className="ticket-info-value">{selectedTicket.email}</div>
+                  <div className="ticket-info-head">Email</div>
+                  <div className="ticket-info-value">{selectedTicket.email}</div>
                 </div>
 
                 <div className="ticket-info-item">
-                    <div className="ticket-info-head">Phone Number</div>
-                    <div className="ticket-info-value">{selectedTicket.phone}</div>
+                  <div className="ticket-info-head">Phone Number</div>
+                  <div className="ticket-info-value">{selectedTicket.phone}</div>
                 </div>
 
                 <div className="ticket-info-item">
-                    <div className="ticket-info-head">Order Number</div>
-                    <div className="ticket-info-value">{selectedTicket.orderNumber}</div>
+                  <div className="ticket-info-head">Order Number</div>
+                  <div className="ticket-info-value">{selectedTicket.orderNumber}</div>
                 </div>
-            </div>
+              </div>
             </div>
 
             <div className="ticket-content-grid">
@@ -286,6 +292,7 @@ function TicketManagement() {
                   <button className="update-btn" onClick={handleUpdate}>
                     Update
                   </button>
+
                   {savedMessage && (
                     <span className="ticket-message saved">{savedMessage}</span>
                   )}

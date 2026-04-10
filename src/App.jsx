@@ -17,6 +17,7 @@ import ReviewManagement from "./pages/ReviewManagement";
 import OrderManagement from "./pages/OrderManagement";
 import PromotionsManagement from "./pages/PromotionsManagement";
 import TicketManagement from "./pages/TicketManagement";
+import FAQTemplates from "./pages/FAQTemplates";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <Route path="/admin/orders" element={<OrderManagement />} />
         <Route path="/admin/promotions" element={<PromotionsManagement />} />
         <Route path="/customer-service/tickets" element={<TicketManagement />} />
+        <Route path="/customer-service/faqs" element={<FAQTemplates />} />
       </Routes>
     </BrowserRouter>
   );
