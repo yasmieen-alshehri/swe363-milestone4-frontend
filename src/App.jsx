@@ -16,6 +16,7 @@ import InventoryManagement from "./pages/InventoryManagement";
 import ReviewManagement from "./pages/ReviewManagement";
 import OrderManagement from "./pages/OrderManagement";
 import PromotionsManagement from "./pages/PromotionsManagement";
+import TicketManagement from "./pages/TicketManagement";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="/admin/reviews" element={<ReviewManagement />} />
         <Route path="/admin/orders" element={<OrderManagement />} />
         <Route path="/admin/promotions" element={<PromotionsManagement />} />
+        <Route path="/customer-service/tickets" element={<TicketManagement />} />
       </Routes>
     </BrowserRouter>
   );
