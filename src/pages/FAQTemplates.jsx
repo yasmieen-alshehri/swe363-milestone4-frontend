@@ -136,7 +136,7 @@ function FAQTemplates() {
           <button
             onClick={() => {
               localStorage.removeItem("currentUser");
-              navigate("/login");
+              navigate("/");
             }}
           >
             Logout

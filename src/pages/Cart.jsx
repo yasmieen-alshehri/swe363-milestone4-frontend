@@ -274,7 +274,7 @@ function Cart() {
 
   const handleCheckout = () => {
     if (!isLoggedIn) {
-      navigate("/login");
+      navigate("/");
       return;
     }
 
