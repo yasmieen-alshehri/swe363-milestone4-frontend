@@ -54,7 +54,14 @@ function AdminSidebar({ activePage }) {
 
       <div className="spacer" />
 
-      <button onClick={() => navigate("/")}>Home Page</button>
+      <button
+        onClick={() => {
+          localStorage.removeItem("currentUser");
+          navigate("/login");
+        }}
+      >
+        Logout
+      </button>
     </div>
   );
 }

@@ -104,11 +104,11 @@ function TicketManagement() {
     const updatedTickets = tickets.map((ticket) =>
       ticket.id === selectedTicket.id
         ? {
-            ...ticket,
-            issueType,
-            refundEligibility,
-            status,
-          }
+          ...ticket,
+          issueType,
+          refundEligibility,
+          status,
+        }
         : ticket
     );
 
@@ -132,7 +132,14 @@ function TicketManagement() {
 
           <div className="cs-spacer" />
 
-          <button onClick={() => navigate("/")}>Home Page</button>
+          <button
+            onClick={() => {
+              localStorage.removeItem("currentUser");
+              navigate("/login");
+            }}
+          >
+            Logout
+          </button>
         </div>
 
         <div className="ticket-main">

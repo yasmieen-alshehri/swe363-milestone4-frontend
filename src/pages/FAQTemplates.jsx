@@ -124,7 +124,14 @@ function FAQTemplates() {
 
           <div className="cs-spacer" />
 
-          <button onClick={() => navigate("/")}>Home Page</button>
+          <button
+            onClick={() => {
+              localStorage.removeItem("currentUser");
+              navigate("/login");
+            }}
+          >
+            Logout
+          </button>
         </div>
 
         <div className="faq-main">
