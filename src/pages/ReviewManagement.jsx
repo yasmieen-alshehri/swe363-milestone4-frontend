@@ -40,17 +40,49 @@ function ReviewManagement() {
 
   const [selectedProduct, setSelectedProduct] = useState(products[0]);
 
-  const handleDeleteReview = (productId, reviewIndex) => {
-    setReviewsData((prev) => ({
-      ...prev,
-      [productId]: prev[productId].filter((_, index) => index !== reviewIndex),
-    }));
+  // --- Modal States ---
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState(null);
+
+  const triggerDelete = (productId, reviewIndex) => {
+    setReviewToDelete({ productId, reviewIndex });
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (reviewToDelete) {
+      const { productId, reviewIndex } = reviewToDelete;
+      setReviewsData((prev) => ({
+        ...prev,
+        [productId]: prev[productId].filter((_, index) => index !== reviewIndex),
+      }));
+    }
+    setShowDeleteModal(false);
+    setReviewToDelete(null);
   };
 
   const selectedReviews = reviewsData[selectedProduct.id] || [];
 
   return (
     <div className="purple-page review-page">
+      {/* Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="custom-modal-overlay">
+          <div className="custom-modal-card">
+            <h3 className="msg-red">Delete Review?</h3>
+            <p>Are you sure you want to delete this review? This action cannot be undone.</p>
+            <div className="modal-actions-split">
+              <button className="cancel-btn" onClick={() => setShowDeleteModal(false)}>
+                Cancel
+              </button>
+              <button className="delete-btn-final" onClick={confirmDelete}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="review-layout">
         <AdminSidebar activePage="reviews" />
 
@@ -95,7 +127,7 @@ function ReviewManagement() {
                   </div>
 
                   <button
-                    onClick={() => handleDeleteReview(selectedProduct.id, index)}
+                    onClick={() => triggerDelete(selectedProduct.id, index)}
                     className="delete-review-btn"
                   >
                     🗑
