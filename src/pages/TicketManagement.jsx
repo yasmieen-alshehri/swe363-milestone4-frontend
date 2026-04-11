@@ -132,7 +132,7 @@ function TicketManagement() {
 
           <div className="cs-spacer" />
 
-          <button onClick={() => navigate("/")}>Home Page</button>
+          <button onClick={() => navigate("/")}>Log out</button>
         </div>
 
         <div className="ticket-main">
