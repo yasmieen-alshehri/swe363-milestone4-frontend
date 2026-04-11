@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import rose from "../assets/rose.png";
 import rosemary from "../assets/rosemary.png";
@@ -6,333 +6,298 @@ import logo from "../assets/bubble-logo.png";
 import "../styles/ticketManagement.css";
 
 function TicketManagement() {
-  const navigate = useNavigate();
+ const navigate = useNavigate();
 
-  const [tickets, setTickets] = useState([
-    {
-      id: "#123",
-      customer: "Username",
-      email: "username123@gmail.com",
-      phone: "12312312312",
-      orderNumber: "#1024",
-      amount: "$6.00",
-      status: "Pending",
-      date: "14-02-2026",
-      issueType: "Refund",
-      refundEligibility: "Approve",
-      subject: "Refund",
-      message: "I want a refund",
-      orderItems: [
-        { name: "Rosemary Bliss", price: "$3.00", qty: 1, image: rosemary },
-        { name: "Sakura Bliss", price: "$3.00", qty: 1, image: rose },
-      ],
-    },
-    {
-      id: "#124",
-      customer: "User 2",
-      email: "user2@gmail.com",
-      phone: "0555555555",
-      orderNumber: "#1040",
-      amount: "$30.00",
-      status: "Open",
-      date: "15-02-2026",
-      issueType: "Wrong Order",
-      refundEligibility: "Pending",
-      subject: "Wrong order received",
-      message: "I received the wrong product.",
-      orderItems: [
-        { name: "Sakura Bliss", price: "$30.00", qty: 1, image: rose },
-      ],
-    },
-    {
-      id: "#125",
-      customer: "User 3",
-      email: "user3@gmail.com",
-      phone: "0566666666",
-      orderNumber: "#1055",
-      amount: "$50.00",
-      status: "Processed",
-      date: "16-02-2026",
-      issueType: "Late Delivery",
-      refundEligibility: "Reject",
-      subject: "Delivery issue",
-      message: "My order arrived late.",
-      orderItems: [
-        { name: "Rosemary Bliss", price: "$50.00", qty: 1, image: rosemary },
-      ],
-    },
-  ]);
+ const [tickets, setTickets] = useState(() => {
+   const saved = localStorage.getItem("tickets");
 
-  const [filterStatus, setFilterStatus] = useState("All");
-  const [ticketSearch, setTicketSearch] = useState("");
-  const [selectedTicketId, setSelectedTicketId] = useState("#123");
+   return saved
+     ? JSON.parse(saved)
+     : [
+         {
+           id: "#123",
+           customer: "Username",
+           email: "username123@gmail.com",
+           phone: "12312312312",
+           orderNumber: "#1024",
+           amount: "$6.00",
+           status: "Pending",
+           date: "14-02-2026",
+           issueType: "Refund",
+           refundEligibility: "Approve",
+           subject: "Refund",
+           message: "I want a refund",
+           orderItems: [
+             { name: "Rosemary Bliss", price: "$3.00", qty: 1, image: rosemary },
+             { name: "Sakura Bliss", price: "$3.00", qty: 1, image: rose },
+           ],
+         },
+       ];
+ });
 
-  const selectedTicket =
-    tickets.find((ticket) => ticket.id === selectedTicketId) || tickets[0];
+ useEffect(() => {
+   localStorage.setItem("tickets", JSON.stringify(tickets));
+ }, [tickets]);
 
-  const [issueType, setIssueType] = useState(selectedTicket.issueType);
-  const [refundEligibility, setRefundEligibility] = useState(
-    selectedTicket.refundEligibility
-  );
-  const [status, setStatus] = useState(selectedTicket.status);
-  const [note, setNote] = useState("");
-  const [savedMessage, setSavedMessage] = useState("");
+ const [filterStatus, setFilterStatus] = useState("All");
+ const [ticketSearch, setTicketSearch] = useState("");
+ const [selectedTicketId, setSelectedTicketId] = useState("#123");
 
-  const filteredTickets = tickets.filter((ticket) => {
-    const matchesStatus =
-      filterStatus === "All" || ticket.status === filterStatus;
+ const selectedTicket =
+   tickets.find((ticket) => ticket.id === selectedTicketId) || tickets[0];
 
-    const matchesSearch = ticket.id
-      .toLowerCase()
-      .includes(ticketSearch.toLowerCase());
+ const [issueType, setIssueType] = useState(selectedTicket.issueType);
+ const [refundEligibility, setRefundEligibility] = useState(
+   selectedTicket.refundEligibility
+ );
+ const [status, setStatus] = useState(selectedTicket.status);
+ const [note, setNote] = useState("");
+ const [savedMessage, setSavedMessage] = useState("");
 
-    return matchesStatus && matchesSearch;
-  });
+ const filteredTickets = tickets.filter((ticket) => {
+   const matchesStatus =
+     filterStatus === "All" || ticket.status === filterStatus;
 
-  const handleSelectTicket = (ticket) => {
-    setSelectedTicketId(ticket.id);
-    setIssueType(ticket.issueType);
-    setRefundEligibility(ticket.refundEligibility);
-    setStatus(ticket.status);
-    setNote("");
-    setSavedMessage("");
-  };
+   const matchesSearch = ticket.id
+     .toLowerCase()
+     .includes(ticketSearch.toLowerCase());
 
-  const handleUpdate = () => {
-    if (!selectedTicket) return;
+   return matchesStatus && matchesSearch;
+ });
 
-    const updatedTickets = tickets.map((ticket) =>
-      ticket.id === selectedTicket.id
-        ? {
-          ...ticket,
-          issueType,
-          refundEligibility,
-          status,
-        }
-        : ticket
-    );
+ const handleSelectTicket = (ticket) => {
+   setSelectedTicketId(ticket.id);
+   setIssueType(ticket.issueType);
+   setRefundEligibility(ticket.refundEligibility);
+   setStatus(ticket.status);
+   setNote("");
+   setSavedMessage("");
+ };
 
-    setTickets(updatedTickets);
-    setSavedMessage("Saved!");
-  };
+ const handleUpdate = () => {
+   if (!selectedTicket) return;
 
-  return (
-    <div className="purple-page ticket-page">
-      <div className="ticket-layout">
-        <div className="cs-sidebar">
-          <div className="cs-logo-card">
-            <img src={logo} alt="Bubble Logo" />
-          </div>
+   const updatedTickets = tickets.map((ticket) =>
+     ticket.id === selectedTicket.id
+       ? {
+           ...ticket,
+           issueType,
+           refundEligibility,
+           status,
+         }
+       : ticket
+   );
 
-          <button className="active">Ticket Management</button>
+   setTickets(updatedTickets);
+   setSavedMessage("Saved!");
+ };
 
-          <button onClick={() => navigate("/customer-service/faqs")}>
-            FAQ Templates
-          </button>
+ return (
+   <div className="purple-page ticket-page">
+     <div className="ticket-layout">
+       <div className="cs-sidebar">
+         <div className="cs-logo-card">
+           <img src={logo} alt="Bubble Logo" />
+         </div>
 
-          <div className="cs-spacer" />
+         <button className="active">Ticket Management</button>
 
-          <button onClick={() => navigate("/")}>Log out</button>
-        </div>
+         <button onClick={() => navigate("/customer-service/faqs")}>
+           FAQ Templates
+         </button>
 
-        <div className="ticket-main">
-          <div className="ticket-top-panel">
-            <div className="ticket-filter-row">
-              <input
-                type="text"
-                placeholder="Search by Ticket ID"
-                value={ticketSearch}
-                onChange={(e) => setTicketSearch(e.target.value)}
-              />
+         <div className="cs-spacer" />
 
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-              >
-                <option value="All">Filter By: All</option>
-                <option value="Pending">Filter By: Pending</option>
-                <option value="Open">Filter By: Open</option>
-                <option value="Processed">Filter By: Processed</option>
-              </select>
-            </div>
+         <button onClick={() => navigate("/")}>Log out</button>
+       </div>
 
-            <table className="ticket-table">
-              <thead>
-                <tr>
-                  <th>Ticket ID</th>
-                  <th>Order ID.</th>
-                  <th>Customer</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
+       <div className="ticket-main">
+         <div className="ticket-top-panel">
+           <div className="ticket-filter-row">
+             <input
+               type="text"
+               placeholder="Search by Ticket ID"
+               value={ticketSearch}
+               onChange={(e) => setTicketSearch(e.target.value)}
+             />
 
-              <tbody>
-                {filteredTickets.length > 0 ? (
-                  filteredTickets.map((ticket) => (
-                    <tr
-                      key={ticket.id}
-                      className={selectedTicketId === ticket.id ? "selected" : ""}
-                      onClick={() => handleSelectTicket(ticket)}
-                    >
-                      <td>{ticket.id}</td>
-                      <td>{ticket.orderNumber}</td>
-                      <td>{ticket.customer}</td>
-                      <td>{ticket.amount}</td>
-                      <td>
-                        <span
-                          className={`ticket-status ${ticket.status.toLowerCase()}`}
-                        >
-                          {ticket.status}
-                        </span>
-                      </td>
-                      <td>{ticket.date}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6">No tickets found.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+             <select
+               value={filterStatus}
+               onChange={(e) => setFilterStatus(e.target.value)}
+             >
+               <option value="All">Filter By: All</option>
+               <option value="Pending">Filter By: Pending</option>
+               <option value="Open">Filter By: Open</option>
+               <option value="Processed">Filter By: Processed</option>
+             </select>
+           </div>
 
-          <div className="ticket-details-panel">
-            <div className="ticket-info-card">
-              <h2>Ticket {selectedTicket.id}</h2>
+           <table className="ticket-table">
+             <thead>
+               <tr>
+                 <th>Ticket ID</th>
+                 <th>Order ID.</th>
+                 <th>Customer</th>
+                 <th>Amount</th>
+                 <th>Status</th>
+                 <th>Date</th>
+               </tr>
+             </thead>
 
-              <div className="ticket-info-table">
-                <div className="ticket-info-item">
-                  <div className="ticket-info-head">Full Name</div>
-                  <div className="ticket-info-value">{selectedTicket.customer}</div>
-                </div>
+             <tbody>
+               {filteredTickets.length > 0 ? (
+                 filteredTickets.map((ticket) => (
+                   <tr
+                     key={ticket.id}
+                     className={selectedTicketId === ticket.id ? "selected" : ""}
+                     onClick={() => handleSelectTicket(ticket)}
+                   >
+                     <td>{ticket.id}</td>
+                     <td>{ticket.orderNumber}</td>
+                     <td>{ticket.customer}</td>
+                     <td>{ticket.amount}</td>
+                     <td>
+                       <span className={`ticket-status ${ticket.status.toLowerCase()}`}>
+                         {ticket.status}
+                       </span>
+                     </td>
+                     <td>{ticket.date}</td>
+                   </tr>
+                 ))
+               ) : (
+                 <tr>
+                   <td colSpan="6">No tickets found.</td>
+                 </tr>
+               )}
+             </tbody>
+           </table>
+         </div>
 
-                <div className="ticket-info-item">
-                  <div className="ticket-info-head">Email</div>
-                  <div className="ticket-info-value">{selectedTicket.email}</div>
-                </div>
+         <div className="ticket-details-panel">
+           <div className="ticket-info-card">
+             <h2>Ticket {selectedTicket.id}</h2>
 
-                <div className="ticket-info-item">
-                  <div className="ticket-info-head">Phone Number</div>
-                  <div className="ticket-info-value">{selectedTicket.phone}</div>
-                </div>
+             <div className="ticket-info-table">
+               <div className="ticket-info-item">
+                 <div className="ticket-info-head">Full Name</div>
+                 <div className="ticket-info-value">{selectedTicket.customer}</div>
+               </div>
 
-                <div className="ticket-info-item">
-                  <div className="ticket-info-head">Order Number</div>
-                  <div className="ticket-info-value">{selectedTicket.orderNumber}</div>
-                </div>
-              </div>
-            </div>
+               <div className="ticket-info-item">
+                 <div className="ticket-info-head">Email</div>
+                 <div className="ticket-info-value">{selectedTicket.email}</div>
+               </div>
 
-            <div className="ticket-content-grid">
-              <div className="ticket-message-card">
-                <div className="ticket-field">
-                  <label>Subject</label>
-                  <input type="text" value={selectedTicket.subject} readOnly />
-                </div>
+               <div className="ticket-info-item">
+                 <div className="ticket-info-head">Phone Number</div>
+                 <div className="ticket-info-value">{selectedTicket.phone}</div>
+               </div>
 
-                <div className="ticket-field">
-                  <label>Message</label>
-                  <textarea value={selectedTicket.message} readOnly rows={8} />
-                </div>
-              </div>
+               <div className="ticket-info-item">
+                 <div className="ticket-info-head">Order Number</div>
+                 <div className="ticket-info-value">{selectedTicket.orderNumber}</div>
+               </div>
+             </div>
+           </div>
 
-              <div className="ticket-actions-card">
-                <div className="ticket-field">
-                  <label>Issue Type</label>
-                  <select
-                    value={issueType}
-                    onChange={(e) => setIssueType(e.target.value)}
-                  >
-                    <option>Refund</option>
-                    <option>Wrong Order</option>
-                    <option>Missing Item</option>
-                    <option>Late Delivery</option>
-                    <option>Other</option>
-                  </select>
-                </div>
+           <div className="ticket-content-grid">
+             <div className="ticket-message-card">
+               <div className="ticket-field">
+                 <label>Subject</label>
+                 <input type="text" value={selectedTicket.subject} readOnly />
+               </div>
 
-                <div className="ticket-field">
-                  <label>Refund Eligibility</label>
-                  <select
-                    value={refundEligibility}
-                    onChange={(e) => setRefundEligibility(e.target.value)}
-                  >
-                    <option>Approve</option>
-                    <option>Reject</option>
-                    <option>Pending</option>
-                  </select>
-                </div>
+               <div className="ticket-field">
+                 <label>Message</label>
+                 <textarea value={selectedTicket.message} readOnly rows={8} />
+               </div>
+             </div>
 
-                <div className="ticket-field">
-                  <label>Status</label>
-                  <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                  >
-                    <option>Pending</option>
-                    <option>Open</option>
-                    <option>Processed</option>
-                  </select>
-                </div>
+             <div className="ticket-actions-card">
+               <div className="ticket-field">
+                 <label>Issue Type</label>
+                 <select value={issueType} onChange={(e) => setIssueType(e.target.value)}>
+                   <option>Refund</option>
+                   <option>Wrong Order</option>
+                   <option>Missing Item</option>
+                   <option>Late Delivery</option>
+                   <option>Other</option>
+                 </select>
+               </div>
 
-                <div className="ticket-field">
-                  <label>Internal Note</label>
-                  <textarea
-                    rows={6}
-                    placeholder="Write internal note..."
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                  />
-                </div>
+               <div className="ticket-field">
+                 <label>Refund Eligibility</label>
+                 <select value={refundEligibility} onChange={(e) => setRefundEligibility(e.target.value)}>
+                   <option>Approve</option>
+                   <option>Reject</option>
+                   <option>Pending</option>
+                 </select>
+               </div>
 
-                <div className="ticket-button-column">
-                  <button className="update-btn" onClick={handleUpdate}>
-                    Update
-                  </button>
+               <div className="ticket-field">
+                 <label>Status</label>
+                 <select value={status} onChange={(e) => setStatus(e.target.value)}>
+                   <option>Pending</option>
+                   <option>Open</option>
+                   <option>Processed</option>
+                 </select>
+               </div>
 
-                  {savedMessage && (
-                    <span className="ticket-message saved">{savedMessage}</span>
-                  )}
-                </div>
-              </div>
-            </div>
+               <div className="ticket-field">
+                 <label>Internal Note</label>
+                 <textarea
+                   rows={6}
+                   placeholder="Write internal note..."
+                   value={note}
+                   onChange={(e) => setNote(e.target.value)}
+                 />
+               </div>
 
-            <div className="ticket-order-card">
-              <h3>Order</h3>
+               <div className="ticket-button-column">
+                 <button className="update-btn" onClick={handleUpdate}>
+                   Update
+                 </button>
 
-              <table className="ticket-table">
-                <thead>
-                  <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Subtotal</th>
-                  </tr>
-                </thead>
+                 {savedMessage && (
+                   <span className="ticket-message saved">{savedMessage}</span>
+                 )}
+               </div>
+             </div>
+           </div>
 
-                <tbody>
-                  {selectedTicket.orderItems.map((item, index) => (
-                    <tr key={index}>
-                      <td className="product-cell">
-                        <img src={item.image} alt={item.name} />
-                        {item.name}
-                      </td>
-                      <td>{item.price}</td>
-                      <td>{item.qty}</td>
-                      <td>{item.price}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+           <div className="ticket-order-card">
+             <h3>Order</h3>
+
+             <table className="ticket-table">
+               <thead>
+                 <tr>
+                   <th>Product</th>
+                   <th>Price</th>
+                   <th>Quantity</th>
+                   <th>Subtotal</th>
+                 </tr>
+               </thead>
+
+               <tbody>
+                 {selectedTicket.orderItems.map((item, index) => (
+                   <tr key={index}>
+                     <td className="product-cell">
+                       <img src={item.image} alt={item.name} />
+                       {item.name}
+                     </td>
+                     <td>{item.price}</td>
+                     <td>{item.qty}</td>
+                     <td>{item.price}</td>
+                   </tr>
+                 ))}
+               </tbody>
+             </table>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ );
 }
 
 export default TicketManagement;
