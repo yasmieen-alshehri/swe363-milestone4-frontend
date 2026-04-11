@@ -1,9 +1,11 @@
 # Bubble Soap Store
 
 ## Description
+
 A web application for browsing and customizing handmade soaps.
 Users can explore products, add items to the cart, manage a wishlist, and complete the checkout process.
 The system also includes an Admin dashboard and a Customer Service panel for managing products, orders, reviews, tickets, and FAQs.
+
 ---
 
 ## Features
