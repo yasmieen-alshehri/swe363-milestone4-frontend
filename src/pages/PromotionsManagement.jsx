@@ -11,51 +11,91 @@ function PromotionsManagement() {
   });
 
   const [saved, setSaved] = useState(false);
-  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
+
     setSaved(false);
+    setError("");
   };
 
   const handleCreate = () => {
-    const numericValue = parseFloat(form.value);
+    setSaved(false);
+    setError("");
 
-    // 1. Validation Logic: Check if empty or negative
-    const isInvalid = !form.code.trim() || !form.expiry || !form.type || !form.value.trim() || numericValue < 0;
+    const code = form.code.trim().toLowerCase();
+    const expiry = form.expiry;
+    const type = form.type;
+    const value = form.value.trim();
 
-    if (isInvalid) {
-      setShowErrorModal(true);
-      setSaved(false);
+    if (!code || !expiry || !type || !value) {
+      setError("Please fill in all fields.");
       return;
     }
 
-    // 2. If valid: Show inline success only
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const expiryDate = new Date(expiry);
+    if (Number.isNaN(expiryDate.getTime())) {
+      setError("Please enter a valid expiry date.");
+      return;
+    }
+
+    expiryDate.setHours(0, 0, 0, 0);
+
+    if (expiryDate < today) {
+      setError("Expiry date must be today or later.");
+      return;
+    }
+
+    const percent = parseFloat(value.replace("%", ""));
+    if (Number.isNaN(percent) || percent <= 0) {
+      setError("Discount value must be a valid positive percentage, like 10%.");
+      return;
+    }
+
+    const existingPromos =
+      JSON.parse(localStorage.getItem("promoCodes")) || [];
+
+    const exists = existingPromos.some(
+      (promo) => String(promo.code).trim().toLowerCase() === code
+    );
+
+    if (exists) {
+      setError("Promo code already exists.");
+      return;
+    }
+
+    const newPromo = {
+      code,
+      expiry,
+      type,
+      value: value.includes("%") ? value : `${value}%`,
+    };
+
+    localStorage.setItem(
+      "promoCodes",
+      JSON.stringify([...existingPromos, newPromo])
+    );
+
     setSaved(true);
-    setShowErrorModal(false);
+    setForm({
+      code: "",
+      expiry: "",
+      type: "",
+      value: "",
+    });
   };
 
   return (
     <div className="purple-page promo-page">
-      {/* Error Pop-up Only */}
-      {showErrorModal && (
-        <div className="custom-modal-overlay">
-          <div className="custom-modal-card">
-            <h3 className="msg-red">Invalid Input</h3>
-            <p>Please make sure all fields are filled and the discount value is not a negative number.</p>
-            <div className="modal-actions">
-              <button className="confirm-btn" onClick={() => setShowErrorModal(false)}>
-                Got it
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="promo-layout">
         <AdminSidebar activePage="promotions" />
 
@@ -88,7 +128,9 @@ function PromotionsManagement() {
               <div className="promo-field">
                 <label>Discount Type</label>
                 <select name="type" value={form.type} onChange={handleChange}>
-                  <option value="" disabled>Select Type</option>
+                  <option value="" disabled>
+                    Select Type
+                  </option>
                   <option value="All Products">All Products</option>
                   <option value="Specific Product">Specific Product</option>
                   <option value="Category">Category</option>
@@ -99,10 +141,9 @@ function PromotionsManagement() {
               <div className="promo-field">
                 <label>Discount Value</label>
                 <input
-                  type="number"
+                  type="text"
                   name="value"
-                  min="0"
-                  placeholder="e.g. 25"
+                  placeholder="e.g. 25%"
                   value={form.value}
                   onChange={handleChange}
                 />
@@ -113,10 +154,19 @@ function PromotionsManagement() {
               <button className="promo-create-btn" onClick={handleCreate}>
                 Create
               </button>
-              {/* Inline Success Message */}
+
               {saved && (
-                <span className="promo-saved-text msg-green">
+                <span className="promo-saved-text">
                   Promo code created successfully!
+                </span>
+              )}
+
+              {error && (
+                <span
+                  className="promo-saved-text"
+                  style={{ color: "#ff4d6d" }}
+                >
+                  {error}
                 </span>
               )}
             </div>

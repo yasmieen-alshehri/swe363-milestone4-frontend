@@ -196,65 +196,71 @@ function OrderHistory() {
                     <th style={{ padding: "14px 10px", fontSize: "14px" }}>Status</th>
                   </tr>
                 </thead>
+                  <tbody>
+                    {orders.length > 0 ? (
+                      orders.map((order, index) => {
+                        const itemNames =
+                          order.items && order.items.length > 0
+                            ? order.items.map((item) => item.item).join(", ")
+                            : order.item || order.name || "Unknown Item";
 
-                <tbody>
-                  {orders.length > 0 ? (
-                    orders.map((order, index) => (
-                      <tr
-                        key={order.id || index}
-                        style={{
-                          borderTop: "1px solid rgba(255,255,255,0.35)",
-                        }}
-                      >
-                        <td style={{ padding: "18px 10px", color: "#374151" }}>
-                          {order.id || `#${1000 + index}`}
-                        </td>
-
-                        <td style={{ padding: "18px 10px", color: "#374151" }}>
-                          {formatDate(order.date)}
-                        </td>
-
-                        <td style={{ padding: "18px 10px", color: "#374151" }}>
-                          {order.item || order.name || "Unknown Item"}
-                        </td>
-
-                        <td style={{ padding: "18px 10px", color: "#374151" }}>
-                          {typeof order.total === "number"
-                            ? `$${order.total.toFixed(2)}`
-                            : order.total || "$0.00"}
-                        </td>
-
-                        <td style={{ padding: "18px 10px" }}>
-                          <span
+                        return (
+                          <tr
+                            key={order.id || index}
                             style={{
-                              background: "#b99af1",
-                              color: "#5b2fb2",
-                              padding: "6px 12px",
-                              borderRadius: "10px",
-                              fontSize: "12px",
-                              fontWeight: "600",
+                              borderTop: "1px solid rgba(255,255,255,0.35)",
                             }}
                           >
-                            {order.status || "Pending"}
-                          </span>
+                            <td style={{ padding: "18px 10px", color: "#374151" }}>
+                              {order.id || `#${1000 + index}`}
+                            </td>
+
+                            <td style={{ padding: "18px 10px", color: "#374151" }}>
+                              {formatDate(order.date)}
+                            </td>
+
+                            <td style={{ padding: "18px 10px", color: "#374151" }}>
+                              {itemNames}
+                            </td>
+
+                            <td style={{ padding: "18px 10px", color: "#374151" }}>
+                              {typeof order.total === "number"
+                                ? `$${order.total.toFixed(2)}`
+                                : "$0.00"}
+                            </td>
+
+                            <td style={{ padding: "18px 10px" }}>
+                              <span
+                                style={{
+                                  background: "#b99af1",
+                                  color: "#5b2fb2",
+                                  padding: "6px 12px",
+                                  borderRadius: "10px",
+                                  fontSize: "12px",
+                                  fontWeight: "600",
+                                }}
+                              >
+                                {order.status || "Pending"}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="5"
+                          style={{
+                            padding: "24px 10px",
+                            textAlign: "center",
+                            color: "#4b5563",
+                          }}
+                        >
+                          No orders found.
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="5"
-                        style={{
-                          padding: "24px 10px",
-                          textAlign: "center",
-                          color: "#4b5563",
-                        }}
-                      >
-                        No orders found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+                    )}
+                  </tbody>
               </table>
             </div>
           </div>
