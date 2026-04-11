@@ -116,15 +116,41 @@ function Checkout() {
       return;
     }
 
-    if (code === "bubble10") {
-      const amount = subtotal * 0.1;
-      setDiscountAmount(amount);
-      setDiscountMessage("Discount applied successfully");
+    const storedPromos =
+      JSON.parse(localStorage.getItem("promoCodes")) || [];
+
+    const promo = storedPromos.find((p) => p.code === code);
+
+    if (!promo) {
+      setDiscountError("Invalid discount code");
+      setDiscountAmount(0);
       return;
     }
 
-    setDiscountAmount(0);
-    setDiscountError("Invalid discount code");
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const expiryDate = new Date(promo.expiry);
+    expiryDate.setHours(0, 0, 0, 0);
+
+    if (expiryDate < today) {
+      setDiscountError("Promo code expired");
+      setDiscountAmount(0);
+      return;
+    }
+
+    const percent = parseFloat(String(promo.value).replace("%", ""));
+
+    if (isNaN(percent) || percent <= 0) {
+      setDiscountError("Invalid discount value");
+      setDiscountAmount(0);
+      return;
+    }
+
+    const amount = subtotal * (percent / 100);
+
+    setDiscountAmount(amount);
+    setDiscountMessage("Discount applied successfully");
   };
 
   const handleChange = (e) => {

@@ -24,7 +24,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/customize" element={<Customize />} />
         <Route path="/contact" element={<Contact />} />
@@ -33,7 +33,7 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/order-history" element={<OrderHistory />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin/products" element={<ProductManagement />} />

@@ -37,7 +37,7 @@ function Login() {
         },
         {
           id: 3,
-          name: "Supply One",
+          name: "customer service",
           username: "customerservice",
           password: "customer123",
           role: "customer-service",
@@ -81,7 +81,7 @@ function Login() {
     } else if (matchedUser.role === "customer-service") {
       navigate("/customer-service/tickets");
     } else {
-      navigate("/");
+      navigate("/home");
     }
   };
 

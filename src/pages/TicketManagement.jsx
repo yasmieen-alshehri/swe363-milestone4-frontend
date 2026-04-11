@@ -132,14 +132,7 @@ function TicketManagement() {
 
           <div className="cs-spacer" />
 
-          <button
-            onClick={() => {
-              localStorage.removeItem("currentUser");
-              navigate("/login");
-            }}
-          >
-            Logout
-          </button>
+          <button onClick={() => navigate("/")}>Home Page</button>
         </div>
 
         <div className="ticket-main">

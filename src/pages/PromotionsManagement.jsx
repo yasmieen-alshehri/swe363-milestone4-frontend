@@ -29,7 +29,40 @@ function PromotionsManagement() {
       return;
     }
 
+    const existingPromos =
+      JSON.parse(localStorage.getItem("promoCodes")) || [];
+
+    const normalizedCode = form.code.trim().toLowerCase();
+
+    const exists = existingPromos.some(
+      (promo) => promo.code === normalizedCode
+    );
+
+    if (exists) {
+      alert("Promo code already exists.");
+      return;
+    }
+
+    const newPromo = {
+      code: normalizedCode,
+      expiry: form.expiry,
+      type: form.type,
+      value: form.value.trim(),
+    };
+
+    localStorage.setItem(
+      "promoCodes",
+      JSON.stringify([...existingPromos, newPromo])
+    );
+
     setSaved(true);
+
+    setForm({
+      code: "",
+      expiry: "",
+      type: "",
+      value: "",
+    });
   };
 
   return (
@@ -101,7 +134,6 @@ function PromotionsManagement() {
               )}
             </div>
           </div>
-
         </div>
       </div>
     </div>

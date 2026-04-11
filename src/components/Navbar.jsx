@@ -29,7 +29,7 @@ function Navbar() {
   }, []);
 
   const links = [
-    { name: "Home", path: "/" },
+    { name: "Home", path: "/home" },
     { name: "Products", path: "/products" },
     { name: "Contact Us", path: "/contact" },
   ];

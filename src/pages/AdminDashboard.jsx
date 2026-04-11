@@ -16,9 +16,11 @@ import rosemary from "../assets/rosemary.png";
 import soap from "../assets/soap-bliss.png";
 import AdminSidebar from "../components/AdminSidebar";
 
+
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [salesFilter, setSalesFilter] = useState("all");
 
   const allProducts = [
     { id: 1, name: "Sakura Bliss", price: 30, image: rose },
@@ -87,12 +89,23 @@ function AdminDashboard() {
   }, [orders]);
 
   const salesChartData = useMemo(() => {
-    const monthlyMap = {};
+    // Determine the date range based on filter
+    let filteredOrders = orders;
+    if (salesFilter === "last6" || salesFilter === "last3") {
+      const now = new Date();
+      const monthsBack = salesFilter === "last6" ? 6 : 3;
+      const fromDate = new Date(now.getFullYear(), now.getMonth() - monthsBack + 1, 1);
+      filteredOrders = orders.filter((order) => {
+        if (!order.date) return false;
+        const d = new Date(order.date);
+        return !Number.isNaN(d.getTime()) && d >= fromDate && d <= now;
+      });
+    }
 
-    orders.forEach((order) => {
+    const monthlyMap = {};
+    filteredOrders.forEach((order) => {
       const rawDate = order.date ? new Date(order.date) : null;
       if (!rawDate || Number.isNaN(rawDate.getTime())) return;
-
       const monthKey = rawDate.toLocaleDateString("en-US", { month: "short" });
       monthlyMap[monthKey] = (monthlyMap[monthKey] || 0) + Number(order.total || 0);
     });
@@ -102,11 +115,27 @@ function AdminDashboard() {
       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
     ];
 
-    return monthOrder.map((month) => ({
+    // If filtering, only show the last N months
+    let monthsToShow = monthOrder;
+    if (salesFilter === "last6") {
+      const nowIdx = new Date().getMonth();
+      monthsToShow = [];
+      for (let i = 5; i >= 0; i--) {
+        monthsToShow.push(monthOrder[(nowIdx - i + 12) % 12]);
+      }
+    } else if (salesFilter === "last3") {
+      const nowIdx = new Date().getMonth();
+      monthsToShow = [];
+      for (let i = 2; i >= 0; i--) {
+        monthsToShow.push(monthOrder[(nowIdx - i + 12) % 12]);
+      }
+    }
+
+    return monthsToShow.map((month) => ({
       month,
       sales: monthlyMap[month] || 0,
     }));
-  }, [orders]);
+  }, [orders, salesFilter]);
 
   const activityData = useMemo(() => {
     const customers = users.filter((user) => user.role === "user").length;
@@ -219,8 +248,14 @@ function AdminDashboard() {
                 }}
               >
                 <h2 style={panelTitleStyle}>Sales Overview</h2>
-                <select style={selectStyle} defaultValue="all">
+                <select
+                  style={selectStyle}
+                  value={salesFilter}
+                  onChange={e => setSalesFilter(e.target.value)}
+                >
                   <option value="all">All Months</option>
+                  <option value="last6">Last 6 Months</option>
+                  <option value="last3">Last 3 Months</option>
                 </select>
               </div>
 

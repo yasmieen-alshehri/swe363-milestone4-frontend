@@ -1,3 +1,4 @@
+/* --- Base Page Styling --- */
 .faq-page {
   min-height: 100vh;
   padding: 18px 24px;
@@ -10,6 +11,7 @@
   gap: 18px;
 }
 
+/* --- Sidebar --- */
 .cs-sidebar {
   display: flex;
   flex-direction: column;
@@ -81,14 +83,6 @@
   font-weight: 700;
 }
 
-.faq-list-panel h2 {
-  font-size: 32px;
-}
-
-.faq-form-panel h3 {
-  font-size: 26px;
-}
-
 .faq-list {
   display: flex;
   flex-direction: column;
@@ -104,10 +98,6 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 18px;
   padding: 16px 18px;
-}
-
-.faq-list-text {
-  flex: 1;
 }
 
 .faq-question {
@@ -129,17 +119,22 @@
   flex-shrink: 0;
 }
 
+/* --- Updated Button Padding --- */
 .faq-edit-btn,
 .faq-delete-btn,
 .faq-add-btn,
 .faq-save-btn {
   border: none;
-  border-radius: 10px;
-  padding: 10px 18px;
+  border-radius: 12px;
+  padding: 12px 24px; /* Increased padding */
   font-family: "Josefin Sans", sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  min-width: 90px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .faq-edit-btn,
@@ -157,8 +152,6 @@
 
 .faq-add-row {
   margin-top: 18px;
-  display: flex;
-  justify-content: flex-start;
 }
 
 .faq-field {
@@ -180,7 +173,6 @@
   border: 1px solid #bfbfbf;
   background: rgba(255, 255, 255, 0.95);
   font-family: "Josefin Sans", sans-serif;
-  font-size: 14px;
   box-sizing: border-box;
 }
 
@@ -188,37 +180,77 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+}
+
+/* --- Specific Color Edits --- */
+.msg-red {
+  color: #d96a3a !important; /* RED for deleted */
+}
+
+.msg-green {
+  color: #3d9b44 !important; /* GREEN for added/saved */
 }
 
 .faq-message,
 .faq-inline-message {
-  color: #d96a3a;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .faq-inline-message {
   margin-top: 14px;
 }
 
-@media (max-width: 1100px) {
-  .faq-layout {
-    grid-template-columns: 1fr;
-  }
+/* --- Beautiful Modal Pop-up --- */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  backdrop-filter: blur(8px);
 }
 
-@media (max-width: 700px) {
-  .faq-list-item {
-    flex-direction: column;
-  }
+.custom-modal-card {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: slideDown 0.3s ease-out;
+}
 
-  .faq-item-actions {
-    width: 100%;
-  }
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
 
-  .faq-edit-btn,
-  .faq-delete-btn {
-    flex: 1;
-  }
+.modal-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.confirm-btn {
+  background: red;
+  color: white;
+}
+
+.cancel-btn {
+  background: #f0f0f0;
+  color: #2e3d4c;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
