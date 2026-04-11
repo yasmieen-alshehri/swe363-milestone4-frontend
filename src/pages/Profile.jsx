@@ -521,10 +521,18 @@ function Profile() {
                               </td>
 
                               <td style={{ padding: "18px 10px", color: "#374151" }}>
-                                {typeof order.total === "number"
-                                  ? `$${order.total.toFixed(2)}`
-                                  : "$0.00"}
-                              </td>
+                                  {`$${(
+                                    typeof order.total === "number"
+                                      ? order.total
+                                      : typeof order.subtotal === "number"
+                                      ? order.subtotal
+                                      : !Number.isNaN(Number(order.total))
+                                      ? Number(order.total)
+                                      : !Number.isNaN(Number(order.subtotal))
+                                      ? Number(order.subtotal)
+                                      : 0
+                                  ).toFixed(2)}`}
+                                </td>
 
                               <td style={{ padding: "18px 10px" }}>
                                 <span
