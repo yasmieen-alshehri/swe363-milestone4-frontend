@@ -81,17 +81,17 @@ src/
 
 ---
 ## For Testing
-* Admin 
-Username: admin
-Password: admin123
+# Admin 
+* Username: admin
+* Password: admin123
 
-* User
-Username: User 
-Password: User123
+# User
+* Username: User 
+* Password: User123
 
-* Customer Service 
-Username: customerservice 
-Password: customer123
+# Customer Service 
+* Username: customerservice 
+* Password: customer123
 ## Routing Overview
 
 ### Customer Pages
