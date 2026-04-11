@@ -124,7 +124,7 @@ function FAQTemplates() {
 
           <div className="cs-spacer" />
 
-          <button onClick={() => navigate("/")}>Home Page</button>
+          <button onClick={() => navigate("/home")}>Home Page</button>
         </div>
 
         <div className="faq-main">

@@ -221,6 +221,8 @@ function AdminDashboard() {
                 <h2 style={panelTitleStyle}>Sales Overview</h2>
                 <select style={selectStyle} defaultValue="all">
                   <option value="all">All Months</option>
+                  <option value="last6">Last 6 Months</option>
+                  <option value="last3">Last 3 Months</option>
                 </select>
               </div>
 

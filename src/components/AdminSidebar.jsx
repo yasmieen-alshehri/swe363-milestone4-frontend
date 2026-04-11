@@ -54,7 +54,7 @@ function AdminSidebar({ activePage }) {
 
       <div className="spacer" />
 
-      <button onClick={() => navigate("/")}>Home Page</button>
+      <button onClick={() => navigate("/home")}>Home Page</button>
     </div>
   );
 }
