@@ -19,6 +19,7 @@ import PromotionsManagement from "./pages/PromotionsManagement";
 import TicketManagement from "./pages/TicketManagement";
 import FAQTemplates from "./pages/FAQTemplates";
 
+
 function App() {
   return (
     <BrowserRouter>

@@ -1,18 +1,20 @@
 // Navigation bar component
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/bubble-logo.png";
 import cart from "../assets/cart.png";
 import profile from "../assets/profile-picture.png";
-import { useNavigate } from "react-router-dom";
 
 function Navbar() {
-  // Navbar state
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Handle screen resize
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
@@ -26,7 +28,6 @@ function Navbar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Navigation links
   const links = [
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
@@ -55,7 +56,6 @@ function Navbar() {
           zIndex: 100,
         }}
       >
-        {/* Website logo */}
         <img
           src={logo}
           alt="Bubble Logo"
@@ -63,7 +63,7 @@ function Navbar() {
             width: isMobile ? "70px" : "95px",
           }}
         />
-        {/* Desktop navigation links */}
+
         {!isMobile && (
           <div
             style={{
@@ -91,7 +91,7 @@ function Navbar() {
             ))}
           </div>
         )}
-        {/* Cart and profile icons */}
+
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           {isMobile && (
             <div
@@ -129,10 +129,33 @@ function Navbar() {
               cursor: "pointer",
             }}
           />
+
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: isMobile ? "8px 18px" : "10px 24px",
+              borderRadius: "30px",
+              border: "1px solid rgba(255,255,255,0.4)",
+              background: "rgba(255,255,255,0.08)",
+              backdropFilter: "blur(12px)",
+              color: "#3b3b3b",
+              fontSize: isMobile ? "14px" : "16px",
+              fontFamily: "Josefin Sans, sans-serif",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = "rgba(255,255,255,0.16)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = "rgba(255,255,255,0.08)";
+            }}
+          >
+            Logout
+          </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
       {isMobile && menuOpen && (
         <div
           style={{
@@ -168,6 +191,24 @@ function Navbar() {
               {link.name}
             </NavLink>
           ))}
+
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: "10px 20px",
+              borderRadius: "30px",
+              border: "1px solid rgba(255,255,255,0.4)",
+              background: "rgba(255,255,255,0.08)",
+              backdropFilter: "blur(12px)",
+              color: "#3b3b3b",
+              fontSize: "15px",
+              fontFamily: "Josefin Sans, sans-serif",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+          >
+            Logout
+          </button>
         </div>
       )}
     </>
