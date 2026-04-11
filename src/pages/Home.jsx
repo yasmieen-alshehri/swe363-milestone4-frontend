@@ -1,5 +1,3 @@
-// Home page - shows main product and actions (cart + wishlist)
-
 import Navbar from "../components/Navbar";
 import Button from "../components/Button";
 import rose from "../assets/rose.png";
@@ -13,8 +11,8 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const navigate = useNavigate();
 
-  // Simulated login state (change for testing)
-  const isLoggedIn = true;
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const isLoggedIn = !!currentUser;
 
   const product = {
     id: 1,
@@ -24,19 +22,22 @@ function Home() {
   const [liked, setLiked] = useState(false);
   const [cartMessage, setCartMessage] = useState("");
 
-// Check if product is already in wishlist
   useEffect(() => {
+    if (!isLoggedIn) {
+      setLiked(false);
+      return;
+    }
+
     const storedWishlist =
       JSON.parse(localStorage.getItem("wishlistItems")) || [];
 
     const isLiked = storedWishlist.some((item) => item.id === product.id);
     setLiked(isLiked);
-  }, []);
+  }, [isLoggedIn, product.id]);
 
-// Add or remove product from wishlist
   const handleWishlist = () => {
     if (!isLoggedIn) {
-      alert("Please login first");
+      navigate("/");
       return;
     }
 
@@ -46,9 +47,7 @@ function Home() {
     const exists = storedWishlist.find((item) => item.id === product.id);
 
     if (exists) {
-      storedWishlist = storedWishlist.filter(
-        (item) => item.id !== product.id
-      );
+      storedWishlist = storedWishlist.filter((item) => item.id !== product.id);
       setLiked(false);
     } else {
       storedWishlist.push({
@@ -61,14 +60,11 @@ function Home() {
     localStorage.setItem("wishlistItems", JSON.stringify(storedWishlist));
   };
 
-// Add product to cart
   const handleAddToCart = () => {
     if (!isLoggedIn) {
-      alert("Please login first");
+      navigate("/");
       return;
     }
-
-    // Get cart from localStorage
 
     let storedCart =
       JSON.parse(localStorage.getItem("cartItems")) || [];
@@ -92,12 +88,20 @@ function Home() {
 
     localStorage.setItem("cartItems", JSON.stringify(storedCart));
 
-    // Show message when item is added
     setCartMessage("Added to cart");
 
     setTimeout(() => {
       setCartMessage("");
     }, 2000);
+  };
+
+  const handleMoreDetails = () => {
+    if (!isLoggedIn) {
+      navigate("/");
+      return;
+    }
+
+    navigate("/product-details/1");
   };
 
   return (
@@ -204,14 +208,12 @@ function Home() {
             )}
           </div>
 
-          {/* Details */}
           <Button
             text="More Details"
             variant="secondary"
-            onClick={() => navigate("/product-details/1")}
+            onClick={handleMoreDetails}
           />
 
-          {/* Wishlist */}
           <img
             src={liked ? heartFilled : heart}
             alt="wishlist"

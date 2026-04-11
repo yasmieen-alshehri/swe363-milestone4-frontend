@@ -264,7 +264,7 @@ function SignIn() {
         >
           or{" "}
           <span
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/")}
             style={{
               cursor: "pointer",
               fontWeight: "700",
