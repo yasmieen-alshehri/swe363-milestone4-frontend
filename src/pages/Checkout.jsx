@@ -249,69 +249,75 @@ function Checkout() {
     return `#${Math.floor(1000 + Math.random() * 9000)}`;
   };
 
-  const handlePayConfirm = () => {
-    setOrderMessage("");
-    setOrderError("");
-    setFormError("");
-    setEmailError("");
-    setPhoneError("");
+const handlePayConfirm = () => {
+  setOrderMessage("");
+  setOrderError("");
+  setFormError("");
+  setEmailError("");
+  setPhoneError("");
 
-    if (cartWithDetails.length === 0) {
-      setOrderError("Cart is empty");
-      return;
-    }
+  if (cartWithDetails.length === 0) {
+    setOrderError("Cart is empty");
+    return;
+  }
 
-    if (!form.fullName || !form.email || !form.phone || !form.location) {
-      setFormError("Please fill all shipping information");
-      return;
-    }
+  if (!form.fullName || !form.email || !form.phone || !form.location) {
+    setFormError("Please fill all shipping information");
+    return;
+  }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
-      setEmailError("Invalid email address");
-      return;
-    }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(form.email)) {
+    setEmailError("Invalid email address");
+    return;
+  }
 
-    const phoneRegex = /^\d{10}$/;
-    if (!phoneRegex.test(form.phone)) {
-      setPhoneError("Invalid phone number");
-      return;
-    }
+  const phoneRegex = /^\d{10}$/;
+  if (!phoneRegex.test(form.phone)) {
+    setPhoneError("Invalid phone number");
+    return;
+  }
 
-    const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+  const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
 
-    const newOrders = cartWithDetails.map((item) => ({
-      id: generateOrderId(),
-      date: new Date().toISOString(),
-      item: item.name,
-      total: item.price * item.quantity,
-      status: "Shipped",
+  const newOrder = {
+    id: generateOrderId(),
+    date: new Date().toISOString(),
+    items: cartWithDetails.map((item) => ({
       productId: item.id,
+      item: item.name,
       quantity: item.quantity,
-      customer: {
-        fullName: form.fullName,
-        email: form.email,
-        phone: form.phone,
-        location: form.location,
-      },
-    }));
-
-    localStorage.setItem(
-      "orders",
-      JSON.stringify([...newOrders, ...existingOrders])
-    );
-
-    localStorage.setItem("checkoutProfile", JSON.stringify(form));
-    localStorage.setItem("profileData", JSON.stringify(form));
-    localStorage.removeItem("cartItems");
-
-    setCartItems([]);
-    setDiscountCode("");
-    setDiscountAmount(0);
-    setDiscountMessage("");
-    setDiscountError("");
-    setOrderMessage("Order placed successfully");
+      unitPrice: item.price,
+      subtotal: item.price * item.quantity,
+    })),
+    subtotal,
+    discountAmount,
+    total,
+    status: "Shipped",
+    customer: {
+      fullName: form.fullName,
+      email: form.email,
+      phone: form.phone,
+      location: form.location,
+    },
   };
+
+  localStorage.setItem(
+    "orders",
+    JSON.stringify([newOrder, ...existingOrders])
+  );
+
+  localStorage.setItem("checkoutProfile", JSON.stringify(form));
+  localStorage.setItem("profileData", JSON.stringify(form));
+  localStorage.removeItem("cartItems");
+
+  setCartItems([]);
+  setDiscountCode("");
+  setDiscountAmount(0);
+  setDiscountMessage("");
+  setDiscountError("");
+  setOrderMessage("Order placed successfully");
+};
 
   return (
     <div
