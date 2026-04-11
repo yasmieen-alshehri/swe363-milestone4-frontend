@@ -57,7 +57,7 @@ function AdminSidebar({ activePage }) {
       <button
         onClick={() => {
           localStorage.removeItem("currentUser");
-          navigate("/login");
+          navigate("/");
         }}
       >
         Logout
