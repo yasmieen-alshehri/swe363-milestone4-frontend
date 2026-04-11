@@ -80,10 +80,22 @@ src/
 ```
 
 ---
+## For Testing
+* Admin 
+Username: admin
+Password: admin123
+
+* User
+Username: User 
+Password: User123
+
+* Customer Service 
+Username: customerservice 
+Password: customer123
 ## Routing Overview
 
 ### Customer Pages
-* /
+* /home
 * /products
 * /product-details/:id
 * /cart
