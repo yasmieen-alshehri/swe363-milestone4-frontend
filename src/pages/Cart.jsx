@@ -11,8 +11,8 @@ function Cart() {
   const navigate = useNavigate();
   const isMobile = window.innerWidth <= 768;
 
-  // Simulated login state (change for testing)
-  const isLoggedIn = true;
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const isLoggedIn = !!currentUser;
 
   const allProducts = [
     {
@@ -70,7 +70,6 @@ function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
 
-  // Load cart and wishlist from localStorage
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
     const storedWishlist =
@@ -86,7 +85,6 @@ function Cart() {
     setWishlistItems(storedWishlist);
   }, []);
 
-  // Merge cart items with product details
   const cartWithDetails = cartItems
     .map((item) => {
       const product = allProducts.find((p) => p.id === item.id);
@@ -103,7 +101,6 @@ function Cart() {
     })
     .filter(Boolean);
 
-  // Merge wishlist items with product details
   const wishlistWithDetails = wishlistItems
     .map((item) => {
       const product = allProducts.find((p) => p.id === item.id);
@@ -120,16 +117,13 @@ function Cart() {
     })
     .filter(Boolean);
 
-  // Calculate subtotal
   const subtotal = cartWithDetails.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
 
-  // Calculate total after discount
   const total = Math.max(subtotal - discountAmount, 0);
 
-  // Apply discount code
   const handleDiscountApply = () => {
     setDiscountMessage("");
     setDiscountError("");
@@ -142,18 +136,43 @@ function Cart() {
       return;
     }
 
-    if (code === "bubble10") {
-      const amount = subtotal * 0.1;
-      setDiscountAmount(amount);
-      setDiscountMessage("Discount applied successfully");
+    const storedPromos =
+      JSON.parse(localStorage.getItem("promoCodes")) || [];
+
+    const promo = storedPromos.find((p) => p.code === code);
+
+    if (!promo) {
+      setDiscountError("Invalid discount code");
+      setDiscountAmount(0);
       return;
     }
 
-    setDiscountAmount(0);
-    setDiscountError("Invalid discount code");
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const expiryDate = new Date(promo.expiry);
+    expiryDate.setHours(0, 0, 0, 0);
+
+    if (expiryDate < today) {
+      setDiscountError("Promo code expired");
+      setDiscountAmount(0);
+      return;
+    }
+
+    const percent = parseFloat(String(promo.value).replace("%", ""));
+
+    if (isNaN(percent) || percent <= 0) {
+      setDiscountError("Invalid discount value");
+      setDiscountAmount(0);
+      return;
+    }
+
+    const amount = subtotal * (percent / 100);
+
+    setDiscountAmount(amount);
+    setDiscountMessage("Discount applied successfully");
   };
 
-  // Update cart item quantity
   const updateCartQuantity = (itemToUpdate, change) => {
     setCartMessage("");
 
@@ -230,7 +249,6 @@ function Cart() {
     localStorage.setItem("wishlistItems", JSON.stringify(updatedWishlist));
   };
 
-  // Remove item from cart
   const removeCartItem = (itemToRemove) => {
     const updatedCart = cartItems.filter((item) => {
       if (item.customId && itemToRemove.customId) {
@@ -247,7 +265,6 @@ function Cart() {
     setCartMessage("Product removed successfully");
   };
 
-  // Remove item from wishlist
   const removeWishlistItem = (id) => {
     const updatedWishlist = wishlistItems.filter((item) => item.id !== id);
     setWishlistItems(updatedWishlist);
@@ -255,10 +272,9 @@ function Cart() {
     setCartMessage("Product removed successfully");
   };
 
-  // Navigate to checkout page
   const handleCheckout = () => {
     if (!isLoggedIn) {
-      alert("Please login first");
+      navigate("/login");
       return;
     }
 
@@ -293,7 +309,7 @@ function Cart() {
           pointerEvents: "none",
         }}
       />
-      {/* Go back */}
+
       <button
         onClick={() => navigate(-1)}
         style={{
@@ -432,7 +448,6 @@ function Cart() {
                     <th style={thStyle}></th>
                   </tr>
                 </thead>
-                {/* Display cart items */}
                 <tbody>
                   {cartWithDetails.length > 0 ? (
                     cartWithDetails.map((item) => (
@@ -525,7 +540,6 @@ function Cart() {
                     <th style={thStyle}></th>
                   </tr>
                 </thead>
-                {/* Display wishlist items */}
                 <tbody>
                   {wishlistWithDetails.length > 0 ? (
                     wishlistWithDetails.map((item) => (
@@ -588,7 +602,6 @@ function Cart() {
                   ) : (
                     <tr>
                       <td colSpan="5" style={tdStyle}>
-                        {/* Show if wishlist is empty */}
                         Your wishlist is empty
                       </td>
                     </tr>
