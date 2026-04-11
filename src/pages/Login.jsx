@@ -79,7 +79,7 @@ function Login() {
     if (matchedUser.role === "admin") {
       navigate("/admin-dashboard");
     } else if (matchedUser.role === "customer-service") {
-      navigate("customer-service/tickets");
+      navigate("/customer-service/tickets");
     } else {
       navigate("/");
     }
