@@ -132,12 +132,7 @@ function FAQTemplates() {
           </button>
           <button className="active">FAQ Templates</button>
           <div className="cs-spacer" />
-<<<<<<< HEAD
           <button onClick={() => navigate("/")}>Home Page</button>
-=======
-
-          <button onClick={() => navigate("/home")}>Home Page</button>
->>>>>>> 5054aa59c584c090ab68fbdb303f461117a99373
         </div>
 
         <div className="faq-main">
@@ -178,7 +173,6 @@ function FAQTemplates() {
                 <label>Question</label>
                 <input
                   type="text"
-                  placeholder="The question..."
                   value={form.question}
                   onChange={(e) => setForm({ ...form, question: e.target.value })}
                 />
@@ -188,7 +182,6 @@ function FAQTemplates() {
                 <input
                   type="text"
                   value={form.answer}
-                  placeholder="Enthr the answer for the question..."
                   onChange={(e) => setForm({ ...form, answer: e.target.value })}
                 />
               </div>
