@@ -1,69 +1,29 @@
 // Products page - shows all products with filters
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Card from "../components/Card";
 import Button from "../components/Button";
-import rose from "../assets/rose.png";
-import lavender from "../assets/lavender.png";
-import rosemary from "../assets/rosemary.png";
-
 
 function Products() {
   // List of all products
-  const allProducts = [
-    {
-      id: 1,
-      name: "Sakura Bliss",
-      price: 30,
-      image: rose,
-      scent: "Sakura",
-      skinType: "Normal",
-      inStock: true,
-      customizable: false,
-      theme: "pink",
-    },
-    {
-      id: 2,
-      name: "Lavender Bliss",
-      price: 30,
-      image: lavender,
-      scent: "Lavender",
-      skinType: "Normal",
-      inStock: false,
-      customizable: false,
-      theme: "purple",
-    },
-    {
-      id: 3,
-      name: "Rosemary Bliss",
-      price: 50,
-      image: rosemary,
-      scent: "Rose",
-      skinType: "Normal",
-      inStock: true,
-      customizable: false,
-      theme: "yellow",
-    },
+  const [allProducts, setAllProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
-    {
-      id: 4,
-      name: "Soap Bliss",
-      price: null,
-      image: null,
-      scent: "Rose",
-      skinType: "Sensitive",
-      inStock: true,
-      customizable: true,
-    },
-
-  ];
+  useEffect(() => {
+  fetch("http://localhost:5000/api/products")
+    .then(res => res.json())
+    .then(data => {
+      setAllProducts(data);
+      setFilteredProducts(data);
+    })
+    .catch(err => console.log(err));
+}, []);
 
   // Filter states
   const [selectedScents, setSelectedScents] = useState([]);
   const [selectedSkinTypes, setSelectedSkinTypes] = useState([]);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(100);
-  const [filteredProducts, setFilteredProducts] = useState(allProducts);
 
   // Simulated login state (change for testing)
   const isLoggedIn = true;
@@ -361,7 +321,7 @@ function Products() {
                 {/* Render each product card */}
                 {filteredProducts.map((product) => (
                   <Card
-                    key={product.id}
+                    key={product._id}
                     product={product}
                     onWishlistClick={handleWishlistClick}
                   />
