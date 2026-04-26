@@ -17,9 +17,9 @@ function Card({ product }) {
         const storedWishlist =
             JSON.parse(localStorage.getItem("wishlistItems")) || [];
 
-        const exists = storedWishlist.some((item) => item.id === product.id);
+        const exists = storedWishlist.some((item) => item.id === product._id);
         setLiked(exists);
-    }, [product.id]);
+    }, [product._id]);
 
     // Toggle wishlist
     const handleWishlistClick = () => {
@@ -31,15 +31,15 @@ function Card({ product }) {
         const storedWishlist =
             JSON.parse(localStorage.getItem("wishlistItems")) || [];
 
-        const exists = storedWishlist.some((item) => item.id === product.id);
+        const exists = storedWishlist.some((item) => item.id === product._id);
 
         let updatedWishlist;
 
         if (exists) {
-            updatedWishlist = storedWishlist.filter((item) => item.id !== product.id);
+            updatedWishlist = storedWishlist.filter((item) => item.id !== product._id);
             setLiked(false);
         } else {
-            updatedWishlist = [...storedWishlist, { id: product.id, quantity: 1 }];
+            updatedWishlist = [...storedWishlist, { id: product._id, quantity: 1 }];
             setLiked(true);
         }
 
@@ -121,7 +121,7 @@ function Card({ product }) {
             >
                 {product.image ? (
                     <img
-                        src={product.image}
+                        src={`/assets/${product.image}`}
                         alt={product.name}
                         style={{
                             maxWidth: "150px",
