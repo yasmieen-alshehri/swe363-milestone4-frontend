@@ -253,6 +253,24 @@ function Login() {
           Log in
         </button>
 
+        <button
+          onClick={() => navigate("/home")}
+          style={{
+            width: "100%",
+            padding: "12px",
+            marginTop: "10px",
+            borderRadius: "8px",
+            border: "2px solid #bb5bb9",
+            background: "rgba(255,255,255,0.4)",
+            color: "#bb5bb9",
+            fontSize: "15px",
+            fontWeight: "600",
+            cursor: "pointer"
+          }}
+        >
+          Continue as Guest
+        </button>
+
         <p
           style={{
             textAlign: "center",
