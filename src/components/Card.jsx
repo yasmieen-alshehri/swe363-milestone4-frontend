@@ -53,18 +53,18 @@ function Card({ product }) {
         }
 
         const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-        const existingItem = storedCart.find((item) => item.id === product.id);
+        const existingItem = storedCart.find((item) => item.id === product._id);
 
         let updatedCart;
 
         if (existingItem) {
             updatedCart = storedCart.map((item) =>
-                item.id === product.id
+                item.id === product._id
                     ? { ...item, quantity: item.quantity + 1 }
                     : item
             );
         } else {
-            updatedCart = [...storedCart, { id: product.id, quantity: 1 }];
+            updatedCart = [...storedCart, { id: product._id, quantity: 1 }];
         }
 
         localStorage.setItem("cartItems", JSON.stringify(updatedCart));
@@ -121,7 +121,7 @@ function Card({ product }) {
             >
                 {product.image ? (
                     <img
-                        src={`/assets/${product.image}`}
+                       src={new URL(`../assets/${product.image}`, import.meta.url).href}
                         alt={product.name}
                         style={{
                             maxWidth: "150px",
@@ -181,7 +181,7 @@ function Card({ product }) {
                         variant="purple"
                         onClick={() => navigate("/customize")}
                     />
-                ) : product.inStock ? (
+                ) : product.stock > 0 ? (
                     <>
                         <Button
                             text="Add to Cart"
@@ -191,7 +191,7 @@ function Card({ product }) {
                         <Button
                             text="Product Details"
                             variant="purple"
-                            onClick={() => navigate(`/product-details/${product.id}`)}
+                            onClick={() => navigate(`/product-details/${product._id}`)}
                         />
                     </>
                 ) : (
@@ -200,7 +200,7 @@ function Card({ product }) {
                         <Button
                             text="Product Details"
                             variant="purple"
-                            onClick={() => navigate(`/product-details/${product.id}`)}
+                            onClick={() => navigate(`/product-details/${product._id}`)}
                         />
                     </>
                 )}

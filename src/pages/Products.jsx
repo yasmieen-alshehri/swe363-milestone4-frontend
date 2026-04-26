@@ -10,14 +10,25 @@ function Products() {
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
-  fetch("http://localhost:5000/api/products")
-    .then(res => res.json())
-    .then(data => {
-      setAllProducts(data);
-      setFilteredProducts(data);
-    })
-    .catch(err => console.log(err));
-}, []);
+    fetch("http://localhost:5000/api/products")
+      .then(res => res.json())
+      .then(data => {
+        const customSoap = {
+          _id: "custom-soap",
+          name: "Custom Soap",
+          price: null,
+          image: null,
+          scent: "Custom",
+          skinType: "Sensitive",
+          stock: 1,
+          customizable: true
+        };
+
+        setAllProducts([...data, customSoap]);
+        setFilteredProducts([...data, customSoap]);
+      })
+      .catch(err => console.log(err));
+  }, []);
 
   // Filter states
   const [selectedScents, setSelectedScents] = useState([]);

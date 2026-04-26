@@ -42,6 +42,10 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    theme: {
+      type: String,
+      default: "pink",
+    }
   },
   { timestamps: true }
 );

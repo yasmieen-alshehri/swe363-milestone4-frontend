@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/Button";
-import rose from "../assets/rose.png";
-import lavender from "../assets/lavender.png";
 import bubble7 from "../assets/bubble7.png";
 import bubble8 from "../assets/bubble8.png";
 import heart from "../assets/heart.png";
 import heartFilled from "../assets/heart-filled.png";
 import profile from "../assets/profile-picture.png";
-import rosemary from "../assets/rosemary.png";
 
 function ProductDetails() {
     const navigate = useNavigate();
     const { id } = useParams();
+
+    const [product, setProduct] = useState(null);
+    const [reviews, setReviews] = useState([]);
 
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [addedToCart, setAddedToCart] = useState(false);
@@ -33,49 +33,15 @@ function ProductDetails() {
     }, []);
 
     // Product data
-    const products = [
-        {
-            id: 1,
-            name: "Sakura Bliss",
-            price: 30,
-            image: rose,
-            description: "A unique soap, please buy from us :)",
-            ingredients: "Sugar, Sakura, love, Milk, Other stuff, xxxx",
-            inStock: true,
-            stock: 10,
-            theme: "pink",
-            reviews: ["OMG! MY FAVORATE !!!!!", "10/10 WOULD BUY AGAIN !!!!!"],
-        },
-        {
-            id: 2,
-            name: "Lavender Bliss",
-            price: 30,
-            image: lavender,
-            description: "A calming lavender soap for a relaxing routine.",
-            ingredients: "Lavender, Oil, Milk, Other stuff",
-            inStock: false,
-            stock: 0,
-            theme: "purple",
-            reviews: ["Smells amazing!", "Would buy again 💜"],
-        },
-
-        {
-            id: 3,
-            name: "Rosemary Bliss",
-            price: 50,
-            image: rosemary,
-            description: "A refreshing rosemary soap that energizes your skin.",
-            ingredients: "Rosemary, Oil, Milk, Other stuff",
-            inStock: true,
-            stock: 10,
-            theme: "yellow",
-            reviews: ["Very refreshing 🌿", "Love the scent!"],
-        },
-    ];
-
-    // Get selected product by id
-    const product = products.find((p) => p.id === Number(id));
-    const [reviews, setReviews] = useState(product?.reviews || []);
+    useEffect(() => {
+        fetch(`http://localhost:5000/api/products/${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setProduct(data);
+                setReviews(data.reviews || []);
+            })
+            .catch((err) => console.log(err));
+    }, [id]);
 
     if (!product) {
         return (
@@ -113,7 +79,7 @@ function ProductDetails() {
             return;
         }
 
-        if (!product.inStock) {
+        if (product.stock <= 0) {
             alert("Out of stock");
             return;
         }
@@ -122,21 +88,21 @@ function ProductDetails() {
             JSON.parse(localStorage.getItem("cartItems")) || [];
 
         const existingItem = storedCart.find(
-            (item) => item.id === product.id
+            (item) => item.id === product._id
         );
 
         let updatedCart;
 
         if (existingItem) {
             updatedCart = storedCart.map((item) =>
-                item.id === product.id
+                item.id === product._id
                     ? { ...item, quantity: item.quantity + 1 }
                     : item
             );
         } else {
             updatedCart = [
                 ...storedCart,
-                { id: product.id, quantity: 1 },
+                { id: product._id, quantity: 1 },
             ];
         }
 
@@ -250,7 +216,7 @@ function ProductDetails() {
                     }}
                 >
                     <img
-                        src={product.image}
+                        src={new URL(`../assets/${product.image}`, import.meta.url).href}
                         alt={product.name}
                         style={{
                             width: "100%",
@@ -288,12 +254,12 @@ function ProductDetails() {
 
                     <div style={box(isMobile)}>
                         <p style={labelStyle(isMobile)}>Ingredients</p>
-                        <p style={valueStyle(isMobile)}>{product.ingredients}</p>
+                        <p style={valueStyle(isMobile)}>{product.ingredients?.join(", ")}</p>
                     </div>
 
                     <div style={box(isMobile)}>
                         <p style={labelStyle(isMobile)}>
-                            {product.inStock ? `In stock: ${product.stock}` : "Out of stock"}
+                            {product.stock > 0 ? `In stock: ${product.stock}` : "Out of stock"}
                         </p>
                     </div>
 
@@ -321,8 +287,8 @@ function ProductDetails() {
                             {/* Add to cart button */}
                             <Button
                                 text="Add to Cart"
-                                variant={product.inStock ? "primary" : "purpleDisabled"}
-                                disabled={!product.inStock}
+                                variant={product.stock > 0 ? "primary" : "purpleDisabled"}
+                                disabled={product.stock <= 0}
                                 style={{
                                     width: "170px",
                                     borderRadius: "14px",
@@ -359,7 +325,7 @@ function ProductDetails() {
                             </p>
                         )}
 
-                        {!product.inStock && (
+                        {product.stock <= 0 && (
                             <p
                                 style={{
                                     margin: 0,
